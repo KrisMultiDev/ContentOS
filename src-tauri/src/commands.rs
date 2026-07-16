@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use contentos_core::{activity, components, ideas, jobs, pillars, reels, roots, search, settings};
+use contentos_core::{
+    activity, batches, components, ideas, jobs, library, pillars, reels, roots, search, settings,
+};
 use serde::Serialize;
 use serde_json::Value;
 use tauri::State;
@@ -340,4 +342,101 @@ pub fn reels_unscheduled(state: State<'_, AppState>) -> CmdResult<Vec<reels::Ree
 pub fn search_all(state: State<'_, AppState>, query: String) -> CmdResult<Vec<search::SearchHit>> {
     let db = state.db.lock().map_err(err)?;
     search::query(&db.conn, &query, 30).map_err(err)
+}
+
+// ── shoot batches ────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn batches_list(state: State<'_, AppState>) -> CmdResult<Vec<batches::BatchSummary>> {
+    let db = state.db.lock().map_err(err)?;
+    batches::list(&db.conn).map_err(err)
+}
+
+#[tauri::command]
+pub fn batch_create(
+    state: State<'_, AppState>,
+    name: String,
+    shoot_date: Option<String>,
+) -> CmdResult<batches::BatchSummary> {
+    let db = state.db.lock().map_err(err)?;
+    batches::create(&db.conn, &name, shoot_date.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn batch_add_reels(
+    state: State<'_, AppState>,
+    id: String,
+    reel_ids: Vec<String>,
+) -> CmdResult<batches::BatchDetail> {
+    let db = state.db.lock().map_err(err)?;
+    batches::add_reels(&db.conn, &id, &reel_ids).map_err(err)?;
+    batches::detail(&db.conn, &id).map_err(err)
+}
+
+#[tauri::command]
+pub fn batch_detail(state: State<'_, AppState>, id: String) -> CmdResult<batches::BatchDetail> {
+    let db = state.db.lock().map_err(err)?;
+    batches::detail(&db.conn, &id).map_err(err)
+}
+
+#[tauri::command]
+pub fn batch_set_status(state: State<'_, AppState>, id: String, status: String) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    batches::set_status(&db.conn, &id, &status).map_err(err)
+}
+
+#[tauri::command]
+pub fn shot_set_status(state: State<'_, AppState>, id: String, status: String) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    batches::set_shot_status(&db.conn, &id, &status).map_err(err)
+}
+
+#[tauri::command]
+pub fn take_select(state: State<'_, AppState>, shot_id: String, take_id: String) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    batches::select_take(&db.conn, &shot_id, &take_id).map_err(err)
+}
+
+#[tauri::command]
+pub fn take_rate(
+    state: State<'_, AppState>,
+    take_id: String,
+    rating: Option<i64>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    batches::set_take_rating(&db.conn, &take_id, rating).map_err(err)
+}
+
+// ── library ──────────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn inbox_scan(state: State<'_, AppState>, root_id: String) -> CmdResult<library::ScanReport> {
+    let db = state.db.lock().map_err(err)?;
+    library::scan_inbox(&db.conn, &root_id).map_err(err)
+}
+
+#[tauri::command]
+pub fn inbox_list(state: State<'_, AppState>, root_id: String) -> CmdResult<Vec<library::AssetView>> {
+    let db = state.db.lock().map_err(err)?;
+    library::list_inbox(&db.conn, &root_id).map_err(err)
+}
+
+#[tauri::command]
+pub fn assets_list(
+    state: State<'_, AppState>,
+    kind: Option<String>,
+) -> CmdResult<Vec<library::AssetView>> {
+    let db = state.db.lock().map_err(err)?;
+    library::list_assets(&db.conn, kind.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn take_ingest(
+    state: State<'_, AppState>,
+    shot_id: String,
+    asset_id: String,
+    rating: Option<i64>,
+) -> CmdResult<batches::TakeView> {
+    let db = state.db.lock().map_err(err)?;
+    library::ingest_take(&db.conn, &shot_id, &asset_id, rating).map_err(err)
 }

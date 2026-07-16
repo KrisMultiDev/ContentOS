@@ -12,7 +12,7 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 
 ## Status
 
-**Phase 1 — planning.** The app now plans a real content week: ideas backlog with promote-to-reel, block-based script editor with a reusable hook/body/CTA component library (usage counts, full-text search), pipeline status transitions with stage-skip protection, content pillars, and a drag-and-drop month calendar with per-week capacity meters against your weekly target. Shoot/Library/Assemble/Publish are placeholders until their phase lands ([roadmap](docs/07-roadmap.md)).
+**Phase 2 — production.** Planning (ideas, scripts + component library, pillars, calendar) is live, and now so is the shoot pipeline: shoot batches with deduplicated shot lists (shared hooks/bodies collapse to single shots), a full-screen Record Mode teleprompter (Space/K/arrows), inbox scanning with content-hash duplicate detection, triage that links clips to shots as takes with canonical renames (B012_HK0031_T01.mp4), star ratings, and take selection that auto-advances reels to `shot`. Assemble/Publish are placeholders until their phase lands ([roadmap](docs/07-roadmap.md)).
 
 ## Development
 

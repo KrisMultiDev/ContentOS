@@ -207,6 +207,56 @@ textarea.notes { margin-bottom: 12px; }
 }
 .tray-item:hover { background: var(--panel-2); }
 
+/* ── record mode ── */
+.record-mode {
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--bg); color: var(--ink);
+  display: flex; flex-direction: column;
+  padding: 18px 24px calc(18px + env(safe-area-inset-bottom));
+  gap: 14px;
+}
+.record-mode header { display: flex; align-items: center; gap: 12px; }
+.record-mode .rm-progress { flex: 1; color: var(--muted); font-size: 12px; }
+.rm-bar { display: flex; gap: 3px; }
+.rm-tick {
+  flex: 1; height: 6px; border: 0; border-radius: 2px; padding: 0;
+  background: var(--panel-2); cursor: pointer;
+}
+.rm-tick.recorded { background: var(--good); }
+.rm-tick.skipped { background: var(--warn); }
+.rm-tick.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+.record-mode main {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  gap: 14px; max-width: 900px; width: 100%; margin: 0 auto;
+}
+.rm-meta { display: flex; align-items: center; gap: 10px; }
+.rm-kind { font-size: 11px; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; }
+.rm-script { margin: 0; font-size: clamp(24px, 4vw, 40px); font-weight: 600; line-height: 1.35; text-wrap: balance; }
+.rm-used { margin: 0; color: var(--muted); font-size: 12px; }
+.record-mode footer { display: flex; align-items: center; gap: 10px; }
+.record-mode kbd {
+  font-family: var(--font-mono); font-size: 10px; padding: 1px 5px;
+  border: 1px solid var(--line); border-radius: 3px; margin-left: 6px; opacity: 0.8;
+}
+.rm-hint { color: var(--muted); font-size: 12px; }
+
+/* ── library triage ── */
+.shot-triage { display: flex; flex-direction: column; gap: 10px; max-height: 68vh; overflow-y: auto; }
+.triage-shot { border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: var(--panel-2); display: grid; gap: 8px; }
+.takes { display: flex; flex-direction: column; gap: 4px; }
+.take {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 8px; border-radius: 5px; background: var(--panel);
+  border: 1px solid var(--line);
+}
+.take.selected { border-color: var(--good); }
+.stars { display: inline-flex; gap: 1px; }
+.star {
+  border: 0; background: none; cursor: pointer; padding: 0 1px;
+  color: var(--line); font-size: 13px; line-height: 1;
+}
+.star.on { color: var(--warn); }
+
 /* clickable funnel stages */
 a.stage { text-decoration: none; color: inherit; }
 a.stage:hover { border-color: var(--accent); }

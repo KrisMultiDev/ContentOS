@@ -56,6 +56,18 @@ pub fn run() {
             commands::calendar_range,
             commands::reels_unscheduled,
             commands::search_all,
+            commands::batches_list,
+            commands::batch_create,
+            commands::batch_add_reels,
+            commands::batch_detail,
+            commands::batch_set_status,
+            commands::shot_set_status,
+            commands::take_select,
+            commands::take_rate,
+            commands::inbox_scan,
+            commands::inbox_list,
+            commands::assets_list,
+            commands::take_ingest,
         ])
         .run(tauri::generate_context!())
         .expect("error while running ContentOS");

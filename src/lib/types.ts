@@ -132,6 +132,75 @@ export interface CalendarReel {
   target_date: string;
 }
 
+export interface BatchSummary {
+  id: string;
+  code: string;
+  name: string;
+  shoot_date: string | null;
+  status: "planning" | "ready" | "shooting" | "done";
+  shots_total: number;
+  shots_recorded: number;
+  reel_count: number;
+  created_at: string;
+}
+
+export interface TakeView {
+  id: string;
+  take_number: number;
+  asset_id: string;
+  filename: string;
+  rating: number | null;
+  selected: boolean;
+}
+
+export interface ShotView {
+  id: string;
+  position: number;
+  status: "pending" | "recorded" | "skipped";
+  kind: string;
+  clip_key: string;
+  text: string;
+  used_by: string[];
+  takes: TakeView[];
+  selected_take_id: string | null;
+}
+
+export interface BatchDetail {
+  id: string;
+  code: string;
+  name: string;
+  shoot_date: string | null;
+  status: string;
+  notes: string | null;
+  shots: ShotView[];
+}
+
+export interface AssetView {
+  id: string;
+  root_id: string;
+  rel_path: string;
+  filename: string;
+  kind: string;
+  size_bytes: number;
+  duration_ms: number | null;
+  width: number | null;
+  height: number | null;
+  imported_at: string;
+  missing: boolean;
+}
+
+export interface ScanReport {
+  scanned: number;
+  added: number;
+  duplicates: number;
+}
+
+export function fmtBytes(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} GB`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(n / 1e3))} KB`;
+}
+
 export const STATUS_ORDER: ReelStatus[] = [
   "idea", "scripted", "shotlisted", "shot", "assembled",
   "editing", "edited", "scheduled", "posted", "verified",

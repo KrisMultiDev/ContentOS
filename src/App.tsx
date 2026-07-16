@@ -3,9 +3,11 @@ import Shell from "./components/Shell";
 import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
 import Ideas from "./pages/Ideas";
+import Library from "./pages/Library";
 import Placeholder from "./pages/Placeholder";
 import Scripts from "./pages/Scripts";
 import Settings from "./pages/Settings";
+import Shoot from "./pages/Shoot";
 
 export default function App() {
   return (
@@ -16,26 +18,8 @@ export default function App() {
           <Route path="ideas" element={<Ideas />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="scripts" element={<Scripts />} />
-          <Route
-            path="shoot"
-            element={
-              <Placeholder
-                title="Shoot"
-                phase="Phase 2"
-                blurb="Build shoot batches, deduplicated shot lists grouped by setup, and a full-screen Record Mode teleprompter."
-              />
-            }
-          />
-          <Route
-            path="library"
-            element={
-              <Placeholder
-                title="Library"
-                phase="Phase 2"
-                blurb="Every indexed clip with thumbnails and metadata, inbox triage after a shoot day, and take selection."
-              />
-            }
-          />
+          <Route path="shoot" element={<Shoot />} />
+          <Route path="library" element={<Library />} />
           <Route
             path="assemble"
             element={
