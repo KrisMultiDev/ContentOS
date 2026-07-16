@@ -276,6 +276,15 @@ a.stage:hover { border-color: var(--accent); }
   .split, .cal-layout { grid-template-columns: 1fr; }
 }
 
+/* ── assemble reports ── */
+.report { display: grid; gap: 8px; margin-top: 12px; }
+.report-line { margin: 0; font-size: 12.5px; }
+.good-line { color: var(--good); }
+.warn-line { color: var(--warn); }
+.warn-line li { color: var(--warn); }
+.report-list { margin: 0; padding-left: 18px; font-size: 12.5px; display: grid; gap: 3px; }
+.report-list .mono { color: var(--muted); font-size: 11px; }
+
 /* ── first-run steps ── */
 .start-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
 .start-step {

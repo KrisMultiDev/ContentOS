@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use contentos_core::{
-    activity, batches, components, ideas, jobs, library, pillars, reels, roots, search, settings,
+    activity, batches, components, davinci, ideas, jobs, library, pillars, reels, roots, search,
+    settings,
 };
 use serde::Serialize;
 use serde_json::Value;
@@ -439,4 +440,29 @@ pub fn take_ingest(
 ) -> CmdResult<batches::TakeView> {
     let db = state.db.lock().map_err(err)?;
     library::ingest_take(&db.conn, &shot_id, &asset_id, rating).map_err(err)
+}
+
+// ── davinci handoff ──────────────────────────────────────────────
+
+#[tauri::command]
+pub fn handoff_generate(state: State<'_, AppState>, batch_id: String) -> CmdResult<davinci::HandoffReport> {
+    let db = state.db.lock().map_err(err)?;
+    davinci::generate_handoff(&db.conn, &batch_id).map_err(err)
+}
+
+#[tauri::command]
+pub fn exports_scan(state: State<'_, AppState>, root_id: String) -> CmdResult<davinci::ExportScan> {
+    let db = state.db.lock().map_err(err)?;
+    davinci::scan_exports(&db.conn, &root_id).map_err(err)
+}
+
+#[tauri::command]
+pub fn export_confirm(
+    state: State<'_, AppState>,
+    root_id: String,
+    rel_path: String,
+    reel_id: String,
+) -> CmdResult<davinci::ConfirmedExport> {
+    let db = state.db.lock().map_err(err)?;
+    davinci::confirm_export(&db.conn, &root_id, &rel_path, &reel_id).map_err(err)
 }

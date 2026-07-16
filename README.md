@@ -12,7 +12,7 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 
 ## Status
 
-**Phase 2 — production.** Planning (ideas, scripts + component library, pillars, calendar) is live, and now so is the shoot pipeline: shoot batches with deduplicated shot lists (shared hooks/bodies collapse to single shots), a full-screen Record Mode teleprompter (Space/K/arrows), inbox scanning with content-hash duplicate detection, triage that links clips to shots as takes with canonical renames (B012_HK0031_T01.mp4), star ratings, and take selection that auto-advances reels to `shot`. Assemble/Publish are placeholders until their phase lands ([roadmap](docs/07-roadmap.md)).
+**Phase 3 — edit pipeline.** Planning and shooting are live, and now the DaVinci Resolve bridge is too: one click stages a batch into per-reel handoff folders (hardlinked, renamed clips + script text), generates a single FCPXML with a ready-made 1080×1920 timeline per reel (File ▸ Import ▸ Timeline in Resolve), and a watch on 03_EXPORTS matches rendered finals back to reels by their R-code, files them into 04_FINALS, and flips reels to `edited`. Publish (Metricool) is the remaining placeholder ([roadmap](docs/07-roadmap.md)).
 
 ## Development
 

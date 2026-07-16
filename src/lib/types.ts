@@ -195,6 +195,37 @@ export interface ScanReport {
   duplicates: number;
 }
 
+export interface HandoffReel {
+  reel_id: string;
+  code: string;
+  title: string;
+  folder: string;
+  clips: number;
+}
+
+export interface HandoffReport {
+  batch_code: string;
+  handoff_path: string;
+  fcpxml_path: string;
+  staged: HandoffReel[];
+  skipped: string[];
+  warnings: string[];
+}
+
+export interface ExportMatch {
+  rel_path: string;
+  filename: string;
+  reel_id: string;
+  reel_code: string;
+  reel_title: string;
+  reel_status: string;
+}
+
+export interface ExportScan {
+  matches: ExportMatch[];
+  unmatched: string[];
+}
+
 export function fmtBytes(n: number): string {
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)} GB`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)} MB`;

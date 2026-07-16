@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Shell from "./components/Shell";
+import Assemble from "./pages/Assemble";
 import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
 import Ideas from "./pages/Ideas";
@@ -20,16 +21,7 @@ export default function App() {
           <Route path="scripts" element={<Scripts />} />
           <Route path="shoot" element={<Shoot />} />
           <Route path="library" element={<Library />} />
-          <Route
-            path="assemble"
-            element={
-              <Placeholder
-                title="Assemble"
-                phase="Phase 3"
-                blurb="Generate DaVinci handoff folders and pre-built FCPXML timelines; review auto-matched final renders."
-              />
-            }
-          />
+          <Route path="assemble" element={<Assemble />} />
           <Route
             path="publish"
             element={

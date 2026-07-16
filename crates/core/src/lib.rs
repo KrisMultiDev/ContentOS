@@ -1,8 +1,10 @@
 pub mod activity;
 pub mod batches;
 pub mod components;
+pub mod davinci;
 pub mod db;
 pub mod library;
+pub mod media;
 pub mod ideas;
 pub mod ids;
 pub mod jobs;
