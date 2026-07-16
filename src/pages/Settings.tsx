@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { ipc } from "../lib/ipc";
+import { folderName, openInExplorer, pickFolder } from "../lib/native";
 import { applyTheme, loadTheme, type Theme } from "../lib/theme";
-import { PILLAR_COLORS, type AppInfo, type Pillar, type RootKind, type StorageRoot } from "../lib/types";
+import {
+  fmtBytes,
+  PILLAR_COLORS,
+  type AppInfo,
+  type Pillar,
+  type RootKind,
+  type StorageRoot,
+} from "../lib/types";
 
 function PillarsPanel() {
   const [pillars, setPillars] = useState<Pillar[]>([]);
@@ -77,6 +85,42 @@ function PillarsPanel() {
   );
 }
 
+function BackupPanel({ info }: { info: AppInfo | null }) {
+  const [result, setResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function backup() {
+    setError(null);
+    try {
+      const path = await ipc<string>("backup_now");
+      setResult(path);
+    } catch (e) {
+      setError(String(e));
+    }
+  }
+
+  return (
+    <div className="panel">
+      <h2>Database &amp; backups</h2>
+      <p className="empty" style={{ paddingTop: 0 }}>
+        ContentOS v{info?.version ?? "…"} · Database:{" "}
+        <span className="mono">{info?.db_path ?? "…"}</span>
+        <br />
+        A daily snapshot is taken automatically on startup (last 30 kept).
+      </p>
+      <div className="field-row">
+        <button className="btn" onClick={backup}>Back up now</button>
+        {result && (
+          <span className="sub" style={{ color: "var(--good)" }}>
+            Saved to <span className="mono">{result}</span>
+          </span>
+        )}
+      </div>
+      {error && <p className="error-text">{error}</p>}
+    </div>
+  );
+}
+
 function WeeklyTargetPanel() {
   const [target, setTarget] = useState("100");
   const [saved, setSaved] = useState(true);
@@ -126,6 +170,15 @@ export default function Settings() {
 
   useEffect(refresh, [refresh]);
 
+  async function chooseFolder() {
+    setError(null);
+    const picked = await pickFolder("Choose your media folder (e.g. D:\\ContentOS)");
+    if (picked) {
+      setPath(picked);
+      if (!name.trim() || name === "media") setName(folderName(picked));
+    }
+  }
+
   async function addRoot() {
     setError(null);
     setBusy(true);
@@ -144,6 +197,18 @@ export default function Settings() {
     setError(null);
     try {
       await ipc("remove_storage_root", { id });
+      refresh();
+    } catch (e) {
+      setError(String(e));
+    }
+  }
+
+  async function repointRoot(root: StorageRoot) {
+    setError(null);
+    const picked = await pickFolder(`New location for "${root.name}" (the copied folder)`);
+    if (!picked) return;
+    try {
+      await ipc("relocate_storage_root", { id: root.id, newPath: picked });
       refresh();
     } catch (e) {
       setError(String(e));
@@ -174,9 +239,9 @@ export default function Settings() {
               <tr>
                 <th>Name</th>
                 <th>Path</th>
-                <th>Kind</th>
+                <th>Free</th>
                 <th>Status</th>
-                <th></th>
+                <th style={{ width: 220 }}></th>
               </tr>
             </thead>
             <tbody>
@@ -185,8 +250,8 @@ export default function Settings() {
                   <td>
                     <span className="code">{r.name}</span>
                   </td>
-                  <td className="mono">{r.path}</td>
-                  <td>{r.kind}</td>
+                  <td className="mono" style={{ fontSize: 12 }}>{r.path}</td>
+                  <td>{r.free_bytes != null ? fmtBytes(r.free_bytes) : "—"}</td>
                   <td>
                     <span className={r.online ? "pill good" : "pill bad"}>
                       {r.online ? "Online" : "Offline"}
@@ -194,6 +259,12 @@ export default function Settings() {
                   </td>
                   <td>
                     <div className="row-actions">
+                      <button className="btn" onClick={() => openInExplorer(r.path)} disabled={!r.online}>
+                        Open
+                      </button>
+                      <button className="btn" onClick={() => repointRoot(r)} title="Point this root at a new location (after moving to the NAS)">
+                        Re-point…
+                      </button>
                       <button className="btn danger" onClick={() => removeRoot(r.id)}>
                         Remove
                       </button>
@@ -205,15 +276,20 @@ export default function Settings() {
           </table>
         )}
         <div className="field-row" style={{ marginTop: 12 }}>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" style={{ width: 110 }} />
-          <input type="text" value={path} onChange={(e) => setPath(e.target.value)} placeholder="D:\ContentOS" style={{ flex: 1, minWidth: 220 }} />
-          <select value={kind} onChange={(e) => setKind(e.target.value as RootKind)}>
-            <option value="local">local</option>
-            <option value="nas">nas</option>
-          </select>
-          <button className="btn primary" onClick={addRoot} disabled={busy || !path || !name}>
-            Add root
-          </button>
+          <button className="btn primary" onClick={chooseFolder}>Choose folder…</button>
+          {path && (
+            <>
+              <span className="mono" style={{ fontSize: 12 }}>{path}</span>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" style={{ width: 110 }} />
+              <select value={kind} onChange={(e) => setKind(e.target.value as RootKind)}>
+                <option value="local">local</option>
+                <option value="nas">nas</option>
+              </select>
+              <button className="btn primary" onClick={addRoot} disabled={busy || !name.trim()}>
+                Add root
+              </button>
+            </>
+          )}
         </div>
         {error && <p className="error-text">{error}</p>}
       </div>
@@ -234,12 +310,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="panel">
-        <h2>About</h2>
-        <p className="empty">
-          ContentOS v{info?.version ?? "…"} · Database: <span className="mono">{info?.db_path ?? "…"}</span>
-        </p>
-      </div>
+      <BackupPanel info={info} />
     </>
   );
 }

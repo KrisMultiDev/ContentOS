@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ipc } from "../lib/ipc";
+import { openInExplorer } from "../lib/native";
 import {
   fmtBytes,
   type AssetView,
@@ -117,6 +118,14 @@ export default function Library() {
             </option>
           ))}
         </select>
+        <button
+          className="btn"
+          onClick={() => root && openInExplorer(`${root.path}\\00_INBOX`)}
+          disabled={!root?.online}
+          title="Open the inbox folder in Explorer"
+        >
+          Open inbox
+        </button>
         <button className="btn primary" onClick={scan} disabled={!rootId || scanning}>
           {scanning ? "Scanning…" : "Scan inbox"}
         </button>

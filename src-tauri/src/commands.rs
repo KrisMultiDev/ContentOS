@@ -36,6 +36,8 @@ pub struct DashboardStats {
     problems: i64,
     roots_total: i64,
     roots_online: i64,
+    scheduled_this_week: i64,
+    stuck_count: i64,
 }
 
 #[tauri::command]
@@ -58,13 +60,35 @@ pub fn dashboard_stats(state: State<'_, AppState>) -> CmdResult<DashboardStats> 
     let problems = jobs::count_failed(&db.conn).map_err(err)?;
     let all_roots = roots::list_roots(&db.conn).map_err(err)?;
     let roots_online = all_roots.iter().filter(|r| r.online).count() as i64;
+    let scheduled_this_week = reels::scheduled_this_week(&db.conn).map_err(err)?;
+    let stuck_count = reels::stuck(&db.conn, 4).map_err(err)?.len() as i64;
 
     Ok(DashboardStats {
         reels_by_status,
         problems,
         roots_total: all_roots.len() as i64,
         roots_online,
+        scheduled_this_week,
+        stuck_count,
     })
+}
+
+#[tauri::command]
+pub fn reels_stuck(state: State<'_, AppState>, days: i64) -> CmdResult<Vec<reels::ReelSummary>> {
+    let db = state.db.lock().map_err(err)?;
+    reels::stuck(&db.conn, days).map_err(err)
+}
+
+#[tauri::command]
+pub fn backup_now(state: State<'_, AppState>) -> CmdResult<String> {
+    let db = state.db.lock().map_err(err)?;
+    let backups_dir = state
+        .db_path
+        .parent()
+        .ok_or("no data dir")?
+        .join("backups");
+    let path = contentos_core::backup::backup_now(&db.conn, &backups_dir).map_err(err)?;
+    Ok(path.display().to_string())
 }
 
 #[tauri::command]

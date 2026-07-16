@@ -1,4 +1,5 @@
 pub mod activity;
+pub mod backup;
 pub mod batches;
 pub mod components;
 pub mod davinci;

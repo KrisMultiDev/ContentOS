@@ -15,6 +15,9 @@ pub struct StorageRoot {
     pub kind: String,
     pub online: bool,
     pub created_at: String,
+    /// Free disk space at the root's volume (None when offline).
+    #[serde(default)]
+    pub free_bytes: Option<i64>,
 }
 
 /// Register a directory as a storage root. Writes a `.contentos-root` marker
@@ -62,6 +65,7 @@ pub fn add_root(conn: &Connection, name: &str, path: &str, kind: &str) -> Result
         kind: kind.to_string(),
         online: true,
         created_at: ids::now_iso(),
+        free_bytes: fs2::available_space(dir).ok().map(|v| v as i64),
     };
     conn.execute(
         "INSERT INTO storage_roots (id, name, path, kind, online, created_at)
@@ -94,7 +98,12 @@ pub fn list_roots(conn: &Connection) -> Result<Vec<StorageRoot>> {
             "UPDATE storage_roots SET online = ?1 WHERE id = ?2",
             rusqlite::params![online as i64, id],
         )?;
-        roots.push(StorageRoot { id, name, path, kind, online, created_at });
+        let free_bytes = if online {
+            fs2::available_space(Path::new(&path)).ok().map(|v| v as i64)
+        } else {
+            None
+        };
+        roots.push(StorageRoot { id, name, path, kind, online, created_at, free_bytes });
     }
     Ok(roots)
 }

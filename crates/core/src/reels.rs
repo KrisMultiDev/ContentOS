@@ -353,6 +353,36 @@ pub fn calendar_range(conn: &Connection, start: &str, end: &str) -> Result<Vec<C
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
 
+/// Reels sitting mid-pipeline with no movement for `days` — the "falling
+/// through the cracks" detector. Ideas and terminal states don't count.
+pub fn stuck(conn: &Connection, days: i64) -> Result<Vec<ReelSummary>> {
+    let cutoff = (chrono::Local::now() - chrono::Duration::days(days))
+        .to_rfc3339_opts(chrono::SecondsFormat::Secs, false);
+    let mut all = list(conn, None, None, None)?;
+    all.retain(|r| {
+        matches!(
+            r.status.as_str(),
+            "scripted" | "shotlisted" | "shot" | "assembled" | "editing" | "edited"
+        ) && r.updated_at.as_str() < cutoff.as_str()
+    });
+    all.sort_by(|a, b| a.updated_at.cmp(&b.updated_at));
+    Ok(all)
+}
+
+/// Distinct reels with a post scheduled inside the current Mon–Sun week.
+pub fn scheduled_this_week(conn: &Connection) -> Result<i64> {
+    use chrono::Datelike;
+    let today = chrono::Local::now().date_naive();
+    let monday = today - chrono::Duration::days(today.weekday().num_days_from_monday() as i64);
+    let next_monday = monday + chrono::Duration::days(7);
+    Ok(conn.query_row(
+        "SELECT COUNT(DISTINCT reel_id) FROM posts
+         WHERE scheduled_at >= ?1 AND scheduled_at < ?2 AND status != 'canceled'",
+        rusqlite::params![monday.format("%Y-%m-%d").to_string(), next_monday.format("%Y-%m-%d").to_string()],
+        |r| r.get(0),
+    )?)
+}
+
 /// Active reels with no target date yet — the calendar's "to plan" tray.
 pub fn unscheduled(conn: &Connection) -> Result<Vec<ReelSummary>> {
     let mut all = list(conn, None, None, None)?;

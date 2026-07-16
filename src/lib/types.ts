@@ -7,6 +7,7 @@ export interface StorageRoot {
   kind: RootKind;
   online: boolean;
   created_at: string;
+  free_bytes: number | null;
 }
 
 export interface AppInfo {
@@ -33,6 +34,14 @@ export interface DashboardStats {
   problems: number;
   roots_total: number;
   roots_online: number;
+  scheduled_this_week: number;
+  stuck_count: number;
+}
+
+export interface SearchHit {
+  entity: string;
+  entity_id: string;
+  snippet: string;
 }
 
 export interface JobRow {

@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ipc } from "../lib/ipc";
-import { PIPELINE_STAGES, type DashboardStats } from "../lib/types";
+import { PIPELINE_STAGES, type DashboardStats, type ReelSummary } from "../lib/types";
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stuck, setStuck] = useState<ReelSummary[]>([]);
   const [failed, setFailed] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    ipc<DashboardStats>("dashboard_stats").then(setStats).catch(() => setFailed(true));
+    ipc<DashboardStats>("dashboard_stats")
+      .then((s) => {
+        setStats(s);
+        if (s.stuck_count > 0) {
+          ipc<ReelSummary[]>("reels_stuck", { days: 4 }).then((r) => setStuck(r ?? []));
+        }
+      })
+      .catch(() => setFailed(true));
   }, []);
 
   const by = stats?.reels_by_status ?? {};
   const totalReels = Object.values(by).reduce((a, b) => a + b, 0);
-  const scheduled = by["scheduled"] ?? 0;
   const edited = by["edited"] ?? 0;
   const verified = by["verified"] ?? 0;
   const loading = !stats && !failed;
@@ -36,15 +44,42 @@ export default function Dashboard() {
       )}
 
       <div className="tiles">
-        <StatTile label="Scheduled this week" value={loading ? null : scheduled} suffix=" / 100" />
+        <StatTile
+          label="Scheduled this week"
+          value={loading ? null : stats?.scheduled_this_week ?? 0}
+          suffix=" / 100"
+        />
         <StatTile label="Edited, awaiting captions" value={loading ? null : edited} />
         <StatTile label="Verified (all time)" value={loading ? null : verified} />
+        <StatTile
+          label="Stuck reels"
+          value={loading ? null : stats?.stuck_count ?? 0}
+          alert={(stats?.stuck_count ?? 0) > 0}
+        />
         <StatTile
           label="Problems"
           value={loading ? null : stats?.problems ?? 0}
           alert={(stats?.problems ?? 0) > 0}
         />
       </div>
+
+      {stuck.length > 0 && (
+        <div className="panel">
+          <h2>Stuck · no movement in 4+ days</h2>
+          <div className="reel-list" style={{ maxHeight: 220 }}>
+            {stuck.map((r) => (
+              <button key={r.id} className="reel-row" onClick={() => navigate(`/scripts?reel=${r.id}`)}>
+                <span className="code">{r.code}</span>
+                <span className="t">{r.title}</span>
+                <span className="pill warn">{r.status}</span>
+                <span className="sub" style={{ color: "var(--muted)", fontSize: 11 }}>
+                  {daysAgo(r.updated_at)}d idle
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="panel">
         <h2>Pipeline</h2>
@@ -104,6 +139,10 @@ export default function Dashboard() {
       </div>
     </>
   );
+}
+
+function daysAgo(iso: string): number {
+  return Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
 }
 
 function StatTile({

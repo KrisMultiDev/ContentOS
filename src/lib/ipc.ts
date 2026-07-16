@@ -11,6 +11,8 @@ const mocks: Record<string, unknown> = {
     problems: 0,
     roots_total: 1,
     roots_online: 1,
+    scheduled_this_week: 0,
+    stuck_count: 0,
   } satisfies DashboardStats,
   list_storage_roots: [
     {
@@ -20,6 +22,7 @@ const mocks: Record<string, unknown> = {
       kind: "local",
       online: true,
       created_at: new Date().toISOString(),
+      free_bytes: 1.2e12,
     },
   ] satisfies StorageRoot[],
   list_jobs: [] satisfies JobRow[],

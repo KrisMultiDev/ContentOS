@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ipc } from "../lib/ipc";
+import { openInExplorer } from "../lib/native";
 import type {
   BatchSummary,
   ExportScan,
@@ -86,7 +87,10 @@ function HandoffPanel() {
             Staged {report.staged.length} timeline{report.staged.length === 1 ? "" : "s"} for{" "}
             <span className="code">{report.batch_code}</span>. In Resolve:{" "}
             <strong>File ▸ Import ▸ Timeline</strong> →{" "}
-            <span className="mono">{report.fcpxml_path}</span>
+            <span className="mono">_IMPORT_ME.fcpxml</span>{" "}
+            <button className="btn" onClick={() => openInExplorer(report.handoff_path)}>
+              Open folder
+            </button>
           </p>
           <ul className="report-list">
             {report.staged.map((r) => (

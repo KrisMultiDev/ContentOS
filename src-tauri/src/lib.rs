@@ -13,12 +13,16 @@ pub struct AppState {
 
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
             let db_path = data_dir.join("contentos.db");
             let db = Db::open(&db_path)
                 .map_err(|e| format!("failed to open database at {}: {e}", db_path.display()))?;
+            // daily safety net — never blocks startup on failure
+            let _ = contentos_core::backup::daily_backup(&db.conn, &data_dir.join("backups"));
             app.manage(AppState { db: Mutex::new(db), db_path });
             Ok(())
         })
@@ -77,6 +81,8 @@ pub fn run() {
             commands::post_set_status,
             commands::posts_bulk_fill,
             commands::publish_export,
+            commands::reels_stuck,
+            commands::backup_now,
         ])
         .run(tauri::generate_context!())
         .expect("error while running ContentOS");

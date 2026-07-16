@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ipc } from "../lib/ipc";
+import { openInExplorer } from "../lib/native";
 import {
   DEFAULT_POST_TIMES,
   PLATFORM_SHORT,
@@ -297,7 +298,10 @@ function ExportPanel({
         <div className="report">
           <p className="report-line good-line">
             Exported {bundle.exported.length} post{bundle.exported.length === 1 ? "" : "s"} →{" "}
-            <span className="mono">{bundle.folder}</span>
+            <span className="mono">{bundle.folder}</span>{" "}
+            <button className="btn" onClick={() => openInExplorer(bundle.folder)}>
+              Open folder
+            </button>
           </p>
           {bundle.skipped.length > 0 && (
             <ul className="report-list warn-line">

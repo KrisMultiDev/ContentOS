@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { ipc } from "../lib/ipc";
 import type { AppInfo } from "../lib/types";
+import CommandPalette from "./CommandPalette";
 import Icon, { type IconName } from "./Icon";
 
 const NAV: { to: string; label: string; icon: IconName }[] = [
@@ -18,9 +19,21 @@ const NAV: { to: string; label: string; icon: IconName }[] = [
 
 export default function Shell() {
   const [info, setInfo] = useState<AppInfo | null>(null);
+  const [palette, setPalette] = useState(false);
 
   useEffect(() => {
     ipc<AppInfo>("app_info").then(setInfo).catch(() => setInfo(null));
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPalette((p) => !p);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
@@ -41,12 +54,16 @@ export default function Shell() {
         ))}
         <div className="spacer" />
         <div className="side-foot">
+          <button className="btn" onClick={() => setPalette(true)} style={{ width: "100%" }}>
+            Search <kbd className="kbd">Ctrl K</kbd>
+          </button>
           <span>v{info?.version ?? "…"}</span>
         </div>
       </aside>
       <main className="main">
         <Outlet />
       </main>
+      {palette && <CommandPalette onClose={() => setPalette(false)} />}
     </div>
   );
 }

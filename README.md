@@ -12,7 +12,7 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 
 ## Status
 
-**Phase 4 — publishing.** The full pipeline is live end to end: queue edited reels into per-platform posts (IG/TikTok/Shorts), write captions + hashtags once per reel, bulk-fill schedule times from calendar dates, then export a Metricool bundle — a bulk-import CSV plus the finals hardlinked and named by slot (2026-07-20_0900_IG_R0142.mp4) for the free-plan manual flow. A tracking board walks posts through scheduled → published → verified (with failure lanes), and reel status follows automatically to `verified`. The Metricool API provider drops in behind the same interface when the plan upgrade lands ([roadmap](docs/07-roadmap.md)).
+**Phase 5 — polish.** All pipeline phases are live (plan → shoot → edit → publish), now with quality-of-life: native folder pickers (no more typing paths), open-in-Explorer buttons on every folder the app creates, automatic daily database backups (30 kept) plus back-up-now, disk-free-space per storage root, a stuck-reel detector on the dashboard (anything idle 4+ days mid-pipeline), a real scheduled-this-week counter, and a Ctrl+K command palette that jumps to any screen or full-text-searches every reel and component ([roadmap](docs/07-roadmap.md)).
 
 ## Development
 
