@@ -27,7 +27,7 @@ Per-platform `posts` rows track everything independently — TikTok can be `publ
 
 ## ⚠ API access is plan-gated — verify before building
 
-Metricool's public API is available on **Advanced/Enterprise tiers**, and its documented surface has historically centered on analytics + scheduling for connected brands. **Phase-4 kickoff task #1 is a spike:** confirm with the current Metricool API docs/account that (a) the plan has API access, (b) scheduling with **video upload** is supported for IG Reels + TikTok + YT Shorts, (c) posted-status and metrics reads cover all three. The `PublishingProvider` trait exists precisely so findings here don't ripple through the app.
+Metricool's public API is available on **Advanced/Enterprise tiers**, and its documented surface has historically centered on analytics + scheduling for connected brands. *Current status: the account is on the free plan; the subscription upgrade happens when Phase 4 reaches this limitation. Until then, development targets the CSV fallback path first, with the API client built behind the same `PublishingProvider` trait.* **Phase-4 kickoff task #1 is a spike:** confirm with the current Metricool API docs/account that (a) the plan has API access, (b) scheduling with **video upload** is supported for IG Reels + TikTok + YT Shorts, (c) posted-status and metrics reads cover all three. The `PublishingProvider` trait exists precisely so findings here don't ripple through the app.
 
 ## Fallback: CSV bulk scheduling
 

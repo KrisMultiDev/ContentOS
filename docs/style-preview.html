@@ -1,0 +1,336 @@
+<title>ContentOS — Visual Direction: Fieldhouse Green</title>
+<style>
+  :root {
+    --page-bg: #EFF1E8;
+    --page-ink: #1C241C;
+    --page-muted: #5C685C;
+    --page-line: #D6DCCB;
+    --page-panel: #FBFBF7;
+    --page-accent: #2F6B4F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #10140F;
+      --page-ink: #E7ECE2;
+      --page-muted: #93A08F;
+      --page-line: #2A332A;
+      --page-panel: #181E17;
+      --page-accent: #7CC08A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page-bg: #10140F;
+    --page-ink: #E7ECE2;
+    --page-muted: #93A08F;
+    --page-line: #2A332A;
+    --page-panel: #181E17;
+    --page-accent: #7CC08A;
+  }
+  :root[data-theme="light"] {
+    --page-bg: #EFF1E8;
+    --page-ink: #1C241C;
+    --page-muted: #5C685C;
+    --page-line: #D6DCCB;
+    --page-panel: #FBFBF7;
+    --page-accent: #2F6B4F;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--page-ink);
+    font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .mono { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  header.intro { margin-bottom: 40px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--page-accent); font-weight: 600; margin-bottom: 10px;
+  }
+  h1 { font-size: 34px; font-weight: 650; margin: 0 0 10px; text-wrap: balance; letter-spacing: -0.01em; }
+  .intro p { max-width: 62ch; color: var(--page-muted); margin: 0; }
+
+  h2 {
+    font-size: 15px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 56px 0 16px; padding-top: 20px; border-top: 1px solid var(--page-line);
+    color: var(--page-ink);
+  }
+  h2 span { color: var(--page-muted); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 10px; font-size: 13px; }
+
+  /* ── swatches ── */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--page-line); border-radius: 6px; overflow: hidden; background: var(--page-panel); }
+  .swatch .chip { height: 64px; }
+  .swatch .meta { padding: 8px 10px; font-size: 12px; }
+  .swatch .meta b { display: block; font-weight: 600; }
+  .swatch .meta code { color: var(--page-muted); font-size: 11px; }
+
+  /* ── type specimen ── */
+  .spec { background: var(--page-panel); border: 1px solid var(--page-line); border-radius: 8px; padding: 24px 28px; display: grid; gap: 14px; }
+  .spec .row { display: flex; align-items: baseline; gap: 20px; }
+  .spec .label { width: 120px; flex: none; font-size: 11px; color: var(--page-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ═══ app mockups: fixed-scheme token scopes ═══ */
+  .scheme-light {
+    --bg: #EFF1E8; --panel: #FBFBF7; --panel-2: #F3F5EC;
+    --ink: #1C241C; --muted: #5C685C; --line: #D6DCCB;
+    --accent: #2F6B4F; --accent-ink: #FFFFFF; --accent-soft: #DFEAD9;
+    --good: #3C8A4E; --warn: #B4831F; --bad: #C24936;
+    --good-soft: #DFEEDB; --warn-soft: #F3E8CC; --bad-soft: #F6DDD7;
+  }
+  .scheme-dark {
+    --bg: #10140F; --panel: #181E17; --panel-2: #1F271F;
+    --panel-2: #1E251D;
+    --ink: #E7ECE2; --muted: #93A08F; --line: #2A332A;
+    --accent: #7CC08A; --accent-ink: #10140F; --accent-soft: #24352A;
+    --good: #7CC08A; --warn: #D9B35E; --bad: #E0796A;
+    --good-soft: #22301F; --warn-soft: #322A18; --bad-soft: #38211D;
+  }
+
+  .app {
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--page-line); border-radius: 10px;
+    display: grid; grid-template-columns: 190px 1fr;
+    overflow: hidden; font-size: 13px;
+    box-shadow: 0 8px 28px rgba(10, 20, 12, 0.10);
+  }
+  .app-scroll { overflow-x: auto; }
+  .app-scroll .app { min-width: 780px; }
+
+  /* sidebar */
+  .side { background: var(--panel); border-right: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; }
+  .logo { display: flex; align-items: center; gap: 8px; padding: 4px 8px 14px; font-weight: 650; font-size: 14px; letter-spacing: -0.01em; }
+  .logo .mark { width: 20px; height: 20px; border-radius: 5px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .nav { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 6px; color: var(--muted); }
+  .nav.on { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+  .nav .dot { width: 6px; height: 6px; border-radius: 2px; background: currentColor; opacity: 0.55; }
+  .nav.on .dot { background: var(--accent); opacity: 1; }
+  .side .spacer { flex: 1; }
+  .disk { margin: 0 6px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--muted); }
+  .disk .bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 6px; overflow: hidden; }
+  .disk .bar i { display: block; height: 100%; width: 64%; background: var(--accent); }
+
+  /* main */
+  .main { padding: 16px 18px 20px; display: grid; gap: 14px; align-content: start; }
+  .topbar { display: flex; align-items: center; gap: 12px; }
+  .topbar h3 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -0.01em; }
+  .topbar .sub { color: var(--muted); font-size: 12px; }
+  .topbar .grow { flex: 1; }
+  .btn { padding: 7px 14px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .tile .k { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .tile .v { font-size: 22px; font-weight: 650; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tile .v small { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .tile.alert .v { color: var(--bad); }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .panel h4 { margin: 0 0 10px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+
+  /* pipeline funnel */
+  .funnel { display: flex; gap: 6px; }
+  .stage { flex: 1; text-align: center; padding: 8px 4px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--line); }
+  .stage b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .stage span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .stage.hot { background: var(--accent-soft); border-color: var(--accent); }
+  .stage.hot b { color: var(--accent); }
+
+  /* schedule list */
+  .row-item { display: flex; align-items: center; gap: 10px; padding: 7px 2px; border-top: 1px solid var(--line); }
+  .row-item:first-of-type { border-top: 0; }
+  .code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 11px; background: var(--accent-soft); color: var(--ink); border-radius: 4px; padding: 2px 6px; }
+  .row-item .t { flex: 1; }
+  .row-item .time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .plat { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; color: var(--muted); }
+
+  .pill { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 9px; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.bad  { background: var(--bad-soft);  color: var(--bad); }
+  .pill.brand{ background: var(--accent-soft); color: var(--accent); }
+
+  /* calendar strip */
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .day { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px; min-height: 86px; }
+  .day .d { font-size: 10px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ev { font-size: 10.5px; border-radius: 4px; padding: 2px 6px; margin-bottom: 4px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .p-moss { background: #4A7856; } .p-clay { background: #A9603E; }
+  .p-ochre { background: #9A7B2D; } .p-teal { background: #3E6E76; }
+  .scheme-dark .ev { color: #0F130E; }
+  .scheme-dark .p-moss { background: #8AB894; } .scheme-dark .p-clay { background: #D19071; }
+  .scheme-dark .p-ochre { background: #CBAF63; } .scheme-dark .p-teal { background: #7FAEB5; }
+  .day .more { font-size: 10px; color: var(--muted); }
+
+  .caption { font-size: 12.5px; color: var(--page-muted); margin: 10px 2px 0; }
+
+  @media (max-width: 720px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .cols { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div class="eyebrow">ContentOS · Visual direction</div>
+    <h1>Fieldhouse Green</h1>
+    <p>Pine green as the working accent on warm, green-biased neutrals — a production
+    binder, not a SaaS gradient. Segoe UI (native on Windows) carries the interface;
+    Cascadia Mono carries the reel codes that stitch the whole system together.
+    Status colors stay separate from the brand green so “good news” and “our brand”
+    never blur.</p>
+  </header>
+
+  <h2>Palette <span>light ground / dark ground</span></h2>
+  <div class="swatches">
+    <div class="swatch"><div class="chip" style="background:#2F6B4F"></div><div class="meta"><b>Pine — accent</b><code>#2F6B4F / dark: #7CC08A</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#EFF1E8"></div><div class="meta"><b>Paper — app ground</b><code>#EFF1E8 / dark: #10140F</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#FBFBF7"></div><div class="meta"><b>Panel</b><code>#FBFBF7 / dark: #181E17</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#1C241C"></div><div class="meta"><b>Ink</b><code>#1C241C / dark: #E7ECE2</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#3C8A4E"></div><div class="meta"><b>Good</b><code>#3C8A4E / dark: #7CC08A</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#B4831F"></div><div class="meta"><b>Warn</b><code>#B4831F / dark: #D9B35E</code></div></div>
+    <div class="swatch"><div class="chip" style="background:#C24936"></div><div class="meta"><b>Failed</b><code>#C24936 / dark: #E0796A</code></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(90deg,#4A7856 25%,#A9603E 25%,#A9603E 50%,#9A7B2D 50%,#9A7B2D 75%,#3E6E76 75%)"></div><div class="meta"><b>Pillar colors</b><code>moss · clay · ochre · teal</code></div></div>
+  </div>
+
+  <h2>Type</h2>
+  <div class="spec">
+    <div class="row"><div class="label">Screen title</div><div style="font-size:24px;font-weight:650;letter-spacing:-0.01em">This week — 62 of 100 scheduled</div></div>
+    <div class="row"><div class="label">Section</div><div style="font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--page-muted)">Pipeline · Week 29</div></div>
+    <div class="row"><div class="label">Body</div><div style="max-width:60ch">Hook HK0031 is selected for three reels. Re-recording it here updates only this reel — the master take stays linked everywhere else.</div></div>
+    <div class="row"><div class="label">Data / codes</div><div class="mono" style="font-size:13px">R0142 · B012_HK0031_T03.mp4 · 00:07:12 · 1080×1920</div></div>
+  </div>
+
+  <h2>The app — light</h2>
+  <div class="app-scroll"><div class="app scheme-light">
+    <div class="side">
+      <div class="logo"><span class="mark">C</span> ContentOS</div>
+      <div class="nav on"><span class="dot"></span> Dashboard</div>
+      <div class="nav"><span class="dot"></span> Calendar</div>
+      <div class="nav"><span class="dot"></span> Scripts</div>
+      <div class="nav"><span class="dot"></span> Shoot</div>
+      <div class="nav"><span class="dot"></span> Library</div>
+      <div class="nav"><span class="dot"></span> Assemble</div>
+      <div class="nav"><span class="dot"></span> Publish</div>
+      <div class="spacer"></div>
+      <div class="disk">D:\ContentOS — 1.2 TB free<div class="bar"><i></i></div></div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <h3>Dashboard</h3><span class="sub">Wed 16 Jul · Week 29</span>
+        <div class="grow"></div>
+        <button class="btn">New batch</button>
+        <button class="btn primary">Push week to Metricool</button>
+      </div>
+      <div class="tiles">
+        <div class="tile"><div class="k">Scheduled this week</div><div class="v">62<small> / 100</small></div></div>
+        <div class="tile"><div class="k">Edited, awaiting captions</div><div class="v">18</div></div>
+        <div class="tile"><div class="k">Verified yesterday</div><div class="v">14<small> / 14</small></div></div>
+        <div class="tile alert"><div class="k">Problems</div><div class="v">2</div></div>
+      </div>
+      <div class="panel">
+        <h4>Pipeline</h4>
+        <div class="funnel">
+          <div class="stage"><b>31</b><span>Scripted</span></div>
+          <div class="stage"><b>24</b><span>Shot</span></div>
+          <div class="stage hot"><b>18</b><span>Edited</span></div>
+          <div class="stage"><b>62</b><span>Scheduled</span></div>
+          <div class="stage"><b>117</b><span>Verified</span></div>
+        </div>
+      </div>
+      <div class="cols">
+        <div class="panel">
+          <h4>Today · 14 posts</h4>
+          <div class="row-item"><span class="code">R0142</span><span class="t">Gym myths that keep you small</span><span class="plat">IG</span><span class="time">09:00</span><span class="pill good">Verified</span></div>
+          <div class="row-item"><span class="code">R0143</span><span class="t">Gym myths pt. 2 — cardio edition</span><span class="plat">TT</span><span class="time">11:30</span><span class="pill good">Published</span></div>
+          <div class="row-item"><span class="code">R0139</span><span class="t">What I eat before a 5am shoot</span><span class="plat">YT</span><span class="time">13:00</span><span class="pill brand">Scheduled</span></div>
+          <div class="row-item"><span class="code">R0147</span><span class="t">POV: your first teleprompter day</span><span class="plat">IG</span><span class="time">19:00</span><span class="pill warn">Needs caption</span></div>
+          <div class="row-item"><span class="code">R0131</span><span class="t">3 hooks, 1 body — the system</span><span class="plat">TT</span><span class="time">20:15</span><span class="pill bad">Push failed</span></div>
+        </div>
+        <div class="panel">
+          <h4>Calendar · this week</h4>
+          <div class="week">
+            <div class="day"><div class="d">Mon 14</div><div class="ev p-moss">R0135 Gym myths</div><div class="ev p-clay">R0128 Meal prep</div><div class="more">+12 more</div></div>
+            <div class="day"><div class="d">Tue 15</div><div class="ev p-ochre">R0138 Q&amp;A</div><div class="ev p-moss">R0140 Form check</div><div class="more">+11 more</div></div>
+            <div class="day"><div class="d">Wed 16</div><div class="ev p-moss">R0142 Gym myths</div><div class="ev p-teal">R0139 5am shoot</div><div class="more">+12 more</div></div>
+            <div class="day"><div class="d">Thu 17</div><div class="ev p-clay">R0148 Groceries</div><div class="more">+9 more</div></div>
+            <div class="day"><div class="d">Fri 18</div><div class="ev p-ochre">R0150 Q&amp;A</div><div class="more">+8 more</div></div>
+            <div class="day"><div class="d">Sat 19</div><div class="more">4 open slots</div></div>
+            <div class="day"><div class="d">Sun 20</div><div class="more">6 open slots</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="caption">Pine accent is spent on one primary action per screen; everything else stays on paper tones. Reel codes always render in mono chips.</p>
+
+  <h2>The app — dark</h2>
+  <div class="app-scroll"><div class="app scheme-dark">
+    <div class="side">
+      <div class="logo"><span class="mark">C</span> ContentOS</div>
+      <div class="nav on"><span class="dot"></span> Dashboard</div>
+      <div class="nav"><span class="dot"></span> Calendar</div>
+      <div class="nav"><span class="dot"></span> Scripts</div>
+      <div class="nav"><span class="dot"></span> Shoot</div>
+      <div class="nav"><span class="dot"></span> Library</div>
+      <div class="nav"><span class="dot"></span> Assemble</div>
+      <div class="nav"><span class="dot"></span> Publish</div>
+      <div class="spacer"></div>
+      <div class="disk">D:\ContentOS — 1.2 TB free<div class="bar"><i></i></div></div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <h3>Dashboard</h3><span class="sub" style="color:var(--muted)">Wed 16 Jul · Week 29</span>
+        <div class="grow"></div>
+        <button class="btn">New batch</button>
+        <button class="btn primary">Push week to Metricool</button>
+      </div>
+      <div class="tiles">
+        <div class="tile"><div class="k">Scheduled this week</div><div class="v">62<small> / 100</small></div></div>
+        <div class="tile"><div class="k">Edited, awaiting captions</div><div class="v">18</div></div>
+        <div class="tile"><div class="k">Verified yesterday</div><div class="v">14<small> / 14</small></div></div>
+        <div class="tile alert"><div class="k">Problems</div><div class="v">2</div></div>
+      </div>
+      <div class="panel">
+        <h4>Pipeline</h4>
+        <div class="funnel">
+          <div class="stage"><b>31</b><span>Scripted</span></div>
+          <div class="stage"><b>24</b><span>Shot</span></div>
+          <div class="stage hot"><b>18</b><span>Edited</span></div>
+          <div class="stage"><b>62</b><span>Scheduled</span></div>
+          <div class="stage"><b>117</b><span>Verified</span></div>
+        </div>
+      </div>
+      <div class="cols">
+        <div class="panel">
+          <h4>Today · 14 posts</h4>
+          <div class="row-item"><span class="code">R0142</span><span class="t">Gym myths that keep you small</span><span class="plat">IG</span><span class="time">09:00</span><span class="pill good">Verified</span></div>
+          <div class="row-item"><span class="code">R0143</span><span class="t">Gym myths pt. 2 — cardio edition</span><span class="plat">TT</span><span class="time">11:30</span><span class="pill good">Published</span></div>
+          <div class="row-item"><span class="code">R0139</span><span class="t">What I eat before a 5am shoot</span><span class="plat">YT</span><span class="time">13:00</span><span class="pill brand">Scheduled</span></div>
+          <div class="row-item"><span class="code">R0147</span><span class="t">POV: your first teleprompter day</span><span class="plat">IG</span><span class="time">19:00</span><span class="pill warn">Needs caption</span></div>
+          <div class="row-item"><span class="code">R0131</span><span class="t">3 hooks, 1 body — the system</span><span class="plat">TT</span><span class="time">20:15</span><span class="pill bad">Push failed</span></div>
+        </div>
+        <div class="panel">
+          <h4>Calendar · this week</h4>
+          <div class="week">
+            <div class="day"><div class="d">Mon 14</div><div class="ev p-moss">R0135 Gym myths</div><div class="ev p-clay">R0128 Meal prep</div><div class="more">+12 more</div></div>
+            <div class="day"><div class="d">Tue 15</div><div class="ev p-ochre">R0138 Q&amp;A</div><div class="ev p-moss">R0140 Form check</div><div class="more">+11 more</div></div>
+            <div class="day"><div class="d">Wed 16</div><div class="ev p-moss">R0142 Gym myths</div><div class="ev p-teal">R0139 5am shoot</div><div class="more">+12 more</div></div>
+            <div class="day"><div class="d">Thu 17</div><div class="ev p-clay">R0148 Groceries</div><div class="more">+9 more</div></div>
+            <div class="day"><div class="d">Fri 18</div><div class="ev p-ochre">R0150 Q&amp;A</div><div class="more">+8 more</div></div>
+            <div class="day"><div class="d">Sat 19</div><div class="more">4 open slots</div></div>
+            <div class="day"><div class="d">Sun 20</div><div class="more">6 open slots</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="caption">Dark theme brightens the accent to leaf green and flips pillar colors to lighter tints with dark text — same hierarchy, no naive inversion.</p>
+</div>
