@@ -12,7 +12,23 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 
 ## Status
 
-**Design phase.** No code yet — the documents below define what we're building.
+**Phase 0 — foundation.** The scaffold is real: Tauri 2 + React + TypeScript shell, SQLite database with the full schema, storage-root management, job queue, and the Fieldhouse Green theme (dark by default). Screens beyond Dashboard/Settings are placeholders until their phase lands ([roadmap](docs/07-roadmap.md)).
+
+## Development
+
+Prerequisites on Windows: [Node 20+](https://nodejs.org), [Rust](https://rustup.rs), and the [Tauri prerequisites](https://tauri.app/start/prerequisites/) (WebView2 is preinstalled on Windows 11).
+
+```powershell
+npm install
+npm run tauri dev      # run the desktop app (hot-reloading UI)
+npm run tauri build    # produce the Windows installer (MSI/NSIS)
+
+npm run build          # frontend type-check + bundle only
+cargo test -p contentos-core   # core (database/logic) test suite
+npm run icons          # regenerate placeholder app icons
+```
+
+Layout: `src/` React UI · `src-tauri/` Tauri shell (thin command layer) · `crates/core/` `contentos-core`, the OS-independent brain — database, migrations, storage roots, jobs — fully unit-tested without the GUI.
 
 ## Design documents
 

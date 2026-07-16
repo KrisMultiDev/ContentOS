@@ -40,4 +40,4 @@ Pillar colors (calendar/boards) — dark theme uses light tints with dark text, 
 
 ## Implementation note
 
-These tokens land in Phase 0 as `src/styles/tokens.css` (both theme blocks) and as the Tailwind theme config, so every screen built from Phase 1 onward inherits the approved look with zero restyling later.
+These tokens live in `src/styles/tokens.css` (dark on `:root`, light under `[data-theme="light"]`), with shared component styles in `src/styles/app.css`. Every screen from Phase 1 onward inherits the approved look with zero restyling later. Tailwind/shadcn onboarding is deferred to when the dense Phase 1+ screens need it — the tokens are the contract either way.

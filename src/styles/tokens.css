@@ -1,0 +1,52 @@
+/* Fieldhouse Green — docs/08-design-system.md. Dark is the default theme. */
+:root {
+  --bg: #10140f;
+  --panel: #181e17;
+  --panel-2: #1e251d;
+  --ink: #e7ece2;
+  --muted: #93a08f;
+  --line: #2a332a;
+  --accent: #7cc08a;
+  --accent-ink: #10140f;
+  --accent-soft: #24352a;
+  --good: #7cc08a;
+  --warn: #d9b35e;
+  --bad: #e0796a;
+  --good-soft: #22301f;
+  --warn-soft: #322a18;
+  --bad-soft: #38211d;
+  --pillar-moss: #8ab894;
+  --pillar-clay: #d19071;
+  --pillar-ochre: #cbaf63;
+  --pillar-teal: #7faeb5;
+  --pillar-ink: #0f130e;
+
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
+
+  --radius-panel: 8px;
+  --radius-chip: 4px;
+}
+
+:root[data-theme="light"] {
+  --bg: #eff1e8;
+  --panel: #fbfbf7;
+  --panel-2: #f3f5ec;
+  --ink: #1c241c;
+  --muted: #5c685c;
+  --line: #d6dccb;
+  --accent: #2f6b4f;
+  --accent-ink: #ffffff;
+  --accent-soft: #dfead9;
+  --good: #3c8a4e;
+  --warn: #b4831f;
+  --bad: #c24936;
+  --good-soft: #dfeedb;
+  --warn-soft: #f3e8cc;
+  --bad-soft: #f6ddd7;
+  --pillar-moss: #4a7856;
+  --pillar-clay: #a9603e;
+  --pillar-ochre: #9a7b2d;
+  --pillar-teal: #3e6e76;
+  --pillar-ink: #ffffff;
+}
