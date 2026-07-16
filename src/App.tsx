@@ -1,7 +1,10 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Shell from "./components/Shell";
+import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
+import Ideas from "./pages/Ideas";
 import Placeholder from "./pages/Placeholder";
+import Scripts from "./pages/Scripts";
 import Settings from "./pages/Settings";
 
 export default function App() {
@@ -10,26 +13,9 @@ export default function App() {
       <Routes>
         <Route element={<Shell />}>
           <Route index element={<Dashboard />} />
-          <Route
-            path="calendar"
-            element={
-              <Placeholder
-                title="Calendar"
-                phase="Phase 1"
-                blurb="Month and week views, drag reels onto days, pillar colors, and capacity counts against your weekly target."
-              />
-            }
-          />
-          <Route
-            path="scripts"
-            element={
-              <Placeholder
-                title="Scripts"
-                phase="Phase 1"
-                blurb="Block-based script editor with a reusable library of hooks, bodies, and CTAs — plus full-text search across everything."
-              />
-            }
-          />
+          <Route path="ideas" element={<Ideas />} />
+          <Route path="calendar" element={<Calendar />} />
+          <Route path="scripts" element={<Scripts />} />
           <Route
             path="shoot"
             element={

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ipc } from "../lib/ipc";
 import { PIPELINE_STAGES, type DashboardStats } from "../lib/types";
 
@@ -50,10 +51,10 @@ export default function Dashboard() {
         <h2>Pipeline</h2>
         <div className="funnel">
           {PIPELINE_STAGES.map((s) => (
-            <div className="stage" key={s.key}>
+            <Link className="stage" key={s.key} to={`/scripts?status=${s.key}`}>
               <b>{by[s.key] ?? 0}</b>
               <span>{s.label}</span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

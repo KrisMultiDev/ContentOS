@@ -5,6 +5,7 @@ import type { AppInfo } from "../lib/types";
 
 const NAV = [
   { to: "/", label: "Dashboard" },
+  { to: "/ideas", label: "Ideas" },
   { to: "/calendar", label: "Calendar" },
   { to: "/scripts", label: "Scripts" },
   { to: "/shoot", label: "Shoot" },

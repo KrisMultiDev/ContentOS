@@ -1,7 +1,111 @@
 import { useCallback, useEffect, useState } from "react";
 import { ipc } from "../lib/ipc";
 import { applyTheme, loadTheme, type Theme } from "../lib/theme";
-import type { AppInfo, RootKind, StorageRoot } from "../lib/types";
+import { PILLAR_COLORS, type AppInfo, type Pillar, type RootKind, type StorageRoot } from "../lib/types";
+
+function PillarsPanel() {
+  const [pillars, setPillars] = useState<Pillar[]>([]);
+  const [name, setName] = useState("");
+  const [color, setColor] = useState("moss");
+  const [target, setTarget] = useState("20");
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(() => {
+    ipc<Pillar[]>("pillars_list", { includeArchived: false }).then((r) => setPillars(r ?? []));
+  }, []);
+  useEffect(refresh, [refresh]);
+
+  async function add() {
+    if (!name.trim()) return;
+    setError(null);
+    try {
+      await ipc("pillars_create", { name, color, targetPerWeek: Number(target) || 0 });
+      setName("");
+      refresh();
+    } catch (e) {
+      setError(String(e));
+    }
+  }
+
+  async function archive(id: string) {
+    try {
+      await ipc("pillars_archive", { id, archived: true });
+      refresh();
+    } catch (e) {
+      setError(String(e));
+    }
+  }
+
+  return (
+    <div className="panel">
+      <h2>Content pillars</h2>
+      {pillars.length > 0 && (
+        <table className="list">
+          <thead>
+            <tr><th></th><th>Name</th><th>Target / week</th><th></th></tr>
+          </thead>
+          <tbody>
+            {pillars.map((p) => (
+              <tr key={p.id}>
+                <td style={{ width: 24 }}>
+                  <span className="pillar-dot" style={{ background: PILLAR_COLORS[p.color] ?? "var(--muted)", display: "inline-block" }} />
+                </td>
+                <td>{p.name}</td>
+                <td>{p.target_per_week}</td>
+                <td style={{ textAlign: "right" }}>
+                  <button className="btn danger" onClick={() => archive(p.id)}>Archive</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <div className="field-row" style={{ marginTop: 12 }}>
+        <input type="text" placeholder="Pillar name" value={name} onChange={(e) => setName(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
+        <select value={color} onChange={(e) => setColor(e.target.value)}>
+          {Object.keys(PILLAR_COLORS).map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+        <input type="text" placeholder="Target/week" value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 100 }} />
+        <button className="btn primary" onClick={add} disabled={!name.trim()}>Add pillar</button>
+      </div>
+      {error && <p className="error-text">{error}</p>}
+    </div>
+  );
+}
+
+function WeeklyTargetPanel() {
+  const [target, setTarget] = useState("100");
+  const [saved, setSaved] = useState(true);
+
+  useEffect(() => {
+    ipc<number | null>("get_setting", { key: "weekly_target" }).then(
+      (v) => typeof v === "number" && setTarget(String(v)),
+    );
+  }, []);
+
+  async function save() {
+    await ipc("set_setting", { key: "weekly_target", value: Number(target) || 100 });
+    setSaved(true);
+  }
+
+  return (
+    <div className="panel">
+      <h2>Weekly target</h2>
+      <div className="field-row">
+        <input
+          type="text"
+          value={target}
+          onChange={(e) => { setTarget(e.target.value); setSaved(false); }}
+          style={{ width: 100 }}
+        />
+        <span className="sub" style={{ color: "var(--muted)" }}>reels per week — drives the calendar capacity meters</span>
+        <button className="btn primary" onClick={save} disabled={saved}>Save</button>
+      </div>
+    </div>
+  );
+}
 
 export default function Settings() {
   const [roots, setRoots] = useState<StorageRoot[]>([]);
@@ -109,6 +213,10 @@ export default function Settings() {
         </div>
         {error && <p className="error-text">{error}</p>}
       </div>
+
+      <PillarsPanel />
+
+      <WeeklyTargetPanel />
 
       <div className="panel">
         <h2>Appearance</h2>

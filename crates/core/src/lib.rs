@@ -1,8 +1,13 @@
 pub mod activity;
+pub mod components;
 pub mod db;
+pub mod ideas;
 pub mod ids;
 pub mod jobs;
+pub mod pillars;
+pub mod reels;
 pub mod roots;
+pub mod search;
 pub mod settings;
 
 pub use db::Db;

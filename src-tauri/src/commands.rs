@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use contentos_core::{activity, jobs, roots, settings};
+use contentos_core::{activity, components, ideas, jobs, pillars, reels, roots, search, settings};
 use serde::Serialize;
 use serde_json::Value;
 use tauri::State;
@@ -123,4 +123,221 @@ pub fn list_jobs(state: State<'_, AppState>) -> CmdResult<Vec<jobs::Job>> {
 pub fn retry_job(state: State<'_, AppState>, id: String) -> CmdResult<()> {
     let db = state.db.lock().map_err(err)?;
     jobs::retry(&db.conn, &id).map_err(err)
+}
+
+// ── pillars ──────────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn pillars_list(state: State<'_, AppState>, include_archived: bool) -> CmdResult<Vec<pillars::Pillar>> {
+    let db = state.db.lock().map_err(err)?;
+    pillars::list(&db.conn, include_archived).map_err(err)
+}
+
+#[tauri::command]
+pub fn pillars_create(
+    state: State<'_, AppState>,
+    name: String,
+    color: String,
+    target_per_week: i64,
+) -> CmdResult<pillars::Pillar> {
+    let db = state.db.lock().map_err(err)?;
+    pillars::create(&db.conn, &name, &color, target_per_week).map_err(err)
+}
+
+#[tauri::command]
+pub fn pillars_update(
+    state: State<'_, AppState>,
+    id: String,
+    name: String,
+    color: String,
+    target_per_week: i64,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    pillars::update(&db.conn, &id, &name, &color, target_per_week).map_err(err)
+}
+
+#[tauri::command]
+pub fn pillars_archive(state: State<'_, AppState>, id: String, archived: bool) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    pillars::set_archived(&db.conn, &id, archived).map_err(err)
+}
+
+// ── ideas ────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn ideas_list(state: State<'_, AppState>, status: Option<String>) -> CmdResult<Vec<ideas::Idea>> {
+    let db = state.db.lock().map_err(err)?;
+    ideas::list(&db.conn, status.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn ideas_create(
+    state: State<'_, AppState>,
+    title: String,
+    pillar_id: Option<String>,
+) -> CmdResult<ideas::Idea> {
+    let db = state.db.lock().map_err(err)?;
+    ideas::create(&db.conn, &title, pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn ideas_update(
+    state: State<'_, AppState>,
+    id: String,
+    title: String,
+    notes: Option<String>,
+    pillar_id: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    ideas::update(&db.conn, &id, &title, notes.as_deref(), pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn ideas_kill(state: State<'_, AppState>, id: String) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    ideas::kill(&db.conn, &id).map_err(err)
+}
+
+#[tauri::command]
+pub fn ideas_promote(state: State<'_, AppState>, id: String) -> CmdResult<reels::ReelDetail> {
+    let db = state.db.lock().map_err(err)?;
+    ideas::promote(&db.conn, &id).map_err(err)
+}
+
+// ── components ───────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn components_list(
+    state: State<'_, AppState>,
+    kind: Option<String>,
+    include_archived: bool,
+    query: Option<String>,
+) -> CmdResult<Vec<components::Component>> {
+    let db = state.db.lock().map_err(err)?;
+    components::list(&db.conn, kind.as_deref(), include_archived, query.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn components_create(
+    state: State<'_, AppState>,
+    kind: String,
+    text: String,
+    tags: Vec<String>,
+    pillar_id: Option<String>,
+) -> CmdResult<components::Component> {
+    let db = state.db.lock().map_err(err)?;
+    components::create(&db.conn, &kind, &text, &tags, pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn components_update(
+    state: State<'_, AppState>,
+    id: String,
+    text: String,
+    tags: Vec<String>,
+    pillar_id: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    components::update(&db.conn, &id, &text, &tags, pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn components_archive(state: State<'_, AppState>, id: String, archived: bool) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    components::set_archived(&db.conn, &id, archived).map_err(err)
+}
+
+// ── reels ────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn reels_list(
+    state: State<'_, AppState>,
+    status: Option<String>,
+    pillar_id: Option<String>,
+    query: Option<String>,
+) -> CmdResult<Vec<reels::ReelSummary>> {
+    let db = state.db.lock().map_err(err)?;
+    reels::list(&db.conn, status.as_deref(), pillar_id.as_deref(), query.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_create(
+    state: State<'_, AppState>,
+    title: String,
+    pillar_id: Option<String>,
+) -> CmdResult<reels::ReelDetail> {
+    let db = state.db.lock().map_err(err)?;
+    reels::create(&db.conn, &title, pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_get(state: State<'_, AppState>, id: String) -> CmdResult<reels::ReelDetail> {
+    let db = state.db.lock().map_err(err)?;
+    reels::get_detail(&db.conn, &id).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_update_meta(
+    state: State<'_, AppState>,
+    id: String,
+    title: String,
+    notes: Option<String>,
+    pillar_id: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    reels::update_meta(&db.conn, &id, &title, notes.as_deref(), pillar_id.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_set_blocks(
+    state: State<'_, AppState>,
+    id: String,
+    blocks: Vec<reels::BlockInput>,
+) -> CmdResult<reels::ReelDetail> {
+    let db = state.db.lock().map_err(err)?;
+    reels::set_blocks(&db.conn, &id, &blocks).map_err(err)?;
+    reels::get_detail(&db.conn, &id).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_set_status(
+    state: State<'_, AppState>,
+    id: String,
+    status: String,
+    overrule: bool,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    reels::set_status(&db.conn, &id, &status, overrule).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_set_target_date(
+    state: State<'_, AppState>,
+    id: String,
+    date: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    reels::set_target_date(&db.conn, &id, date.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn calendar_range(
+    state: State<'_, AppState>,
+    start: String,
+    end: String,
+) -> CmdResult<Vec<reels::CalendarReel>> {
+    let db = state.db.lock().map_err(err)?;
+    reels::calendar_range(&db.conn, &start, &end).map_err(err)
+}
+
+#[tauri::command]
+pub fn reels_unscheduled(state: State<'_, AppState>) -> CmdResult<Vec<reels::ReelSummary>> {
+    let db = state.db.lock().map_err(err)?;
+    reels::unscheduled(&db.conn).map_err(err)
+}
+
+#[tauri::command]
+pub fn search_all(state: State<'_, AppState>, query: String) -> CmdResult<Vec<search::SearchHit>> {
+    let db = state.db.lock().map_err(err)?;
+    search::query(&db.conn, &query, 30).map_err(err)
 }

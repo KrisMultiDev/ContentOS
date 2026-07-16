@@ -4,7 +4,10 @@ use rusqlite::Connection;
 
 use crate::Result;
 
-const MIGRATIONS: &[(i64, &str)] = &[(1, include_str!("../migrations/0001_init.sql"))];
+const MIGRATIONS: &[(i64, &str)] = &[
+    (1, include_str!("../migrations/0001_init.sql")),
+    (2, include_str!("../migrations/0002_fts.sql")),
+];
 
 pub struct Db {
     pub conn: Connection,
@@ -74,7 +77,7 @@ mod tests {
     #[test]
     fn migrations_apply_cleanly() {
         let db = Db::open_in_memory().unwrap();
-        assert_eq!(db.schema_version().unwrap(), 1);
+        assert_eq!(db.schema_version().unwrap(), 2);
         // spot-check a few tables exist
         for table in ["reels", "assets", "posts", "jobs", "storage_roots"] {
             let n: i64 = db
@@ -95,6 +98,6 @@ mod tests {
         let path = dir.path().join("test.db");
         drop(Db::open(&path).unwrap());
         let db = Db::open(&path).unwrap(); // reopening re-runs migrate()
-        assert_eq!(db.schema_version().unwrap(), 1);
+        assert_eq!(db.schema_version().unwrap(), 2);
     }
 }
