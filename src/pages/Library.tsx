@@ -35,9 +35,13 @@ export default function Library() {
     });
   }, []);
 
+  const [inboxLoaded, setInboxLoaded] = useState(false);
   const refreshInbox = useCallback(() => {
     if (!rootId) return;
-    ipc<AssetView[]>("inbox_list", { rootId }).then((r) => setInbox(r ?? []));
+    ipc<AssetView[]>("inbox_list", { rootId }).then((r) => {
+      setInbox(r ?? []);
+      setInboxLoaded(true);
+    });
   }, [rootId]);
   useEffect(refreshInbox, [refreshInbox]);
 
@@ -135,8 +139,13 @@ export default function Library() {
       ) : (
         <div className="split">
           <div className="panel col-list">
-            <h2>Inbox · {inbox.length} unlinked</h2>
-            {inbox.length === 0 ? (
+            <h2>Inbox{inboxLoaded ? ` · ${inbox.length} unlinked` : ""}</h2>
+            {!inboxLoaded ? (
+              <>
+                <div className="skeleton" style={{ height: 28, marginBottom: 4 }} aria-hidden="true" />
+                <div className="skeleton" style={{ height: 28 }} aria-hidden="true" />
+              </>
+            ) : inbox.length === 0 ? (
               <p className="empty">
                 Offload your recordings into{" "}
                 <span className="mono">{root ? `${root.path}\\00_INBOX` : "00_INBOX"}</span> and hit

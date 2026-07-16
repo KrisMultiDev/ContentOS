@@ -52,8 +52,10 @@ function PillarsPanel() {
                 </td>
                 <td>{p.name}</td>
                 <td>{p.target_per_week}</td>
-                <td style={{ textAlign: "right" }}>
-                  <button className="btn danger" onClick={() => archive(p.id)}>Archive</button>
+                <td>
+                  <div className="row-actions">
+                    <button className="btn danger" onClick={() => archive(p.id)}>Archive</button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -191,9 +193,11 @@ export default function Settings() {
                     </span>
                   </td>
                   <td>
-                    <button className="btn danger" onClick={() => removeRoot(r.id)}>
-                      Remove
-                    </button>
+                    <div className="row-actions">
+                      <button className="btn danger" onClick={() => removeRoot(r.id)}>
+                        Remove
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

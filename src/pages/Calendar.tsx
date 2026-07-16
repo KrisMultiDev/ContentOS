@@ -140,7 +140,10 @@ export default function Calendar() {
                     </div>
                   );
                 })}
-                <div className={`cal-week-total${weekCount >= weeklyTarget ? " met" : ""}`}>
+                <div
+                  className={`cal-week-total${weekCount >= weeklyTarget ? " met" : weekCount > 0 ? " partial" : ""}`}
+                  title={`${weekCount} of ${weeklyTarget} reels planned this week`}
+                >
                   {weekCount}
                   <span>/{weeklyTarget}</span>
                 </div>

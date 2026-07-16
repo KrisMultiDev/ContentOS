@@ -70,12 +70,16 @@ function ReelsTab() {
 
   const selectedId = params.get("reel");
 
+  const [listLoaded, setListLoaded] = useState(false);
   const refreshList = useCallback(() => {
     ipc<ReelSummary[]>("reels_list", {
       status: statusFilter || null,
       pillarId: null,
       query: query || null,
-    }).then((r) => setReels(r ?? []));
+    }).then((r) => {
+      setReels(r ?? []);
+      setListLoaded(true);
+    });
   }, [statusFilter, query]);
 
   useEffect(refreshList, [refreshList]);
@@ -222,22 +226,36 @@ function ReelsTab() {
           </button>
         </div>
         <div className="reel-list">
-          {reels.map((r) => (
-            <button
-              key={r.id}
-              className={r.id === selectedId ? "reel-row on" : "reel-row"}
-              onClick={() => setParams((p) => { p.set("reel", r.id); return p; })}
-            >
-              <span
-                className="pillar-dot"
-                style={{ background: pillarColor(pillars, r.pillar_id) }}
-              />
-              <span className="code">{r.code}</span>
-              <span className="t">{r.title}</span>
-              <span className="pill brand">{r.status}</span>
-            </button>
-          ))}
-          {reels.length === 0 && <p className="empty">No reels match.</p>}
+          {!listLoaded && (
+            <>
+              <div className="skeleton" style={{ height: 30 }} aria-hidden="true" />
+              <div className="skeleton" style={{ height: 30 }} aria-hidden="true" />
+              <div className="skeleton" style={{ height: 30 }} aria-hidden="true" />
+            </>
+          )}
+          {listLoaded &&
+            reels.map((r) => (
+              <button
+                key={r.id}
+                className={r.id === selectedId ? "reel-row on" : "reel-row"}
+                onClick={() => setParams((p) => { p.set("reel", r.id); return p; })}
+              >
+                <span
+                  className="pillar-dot"
+                  style={{ background: pillarColor(pillars, r.pillar_id) }}
+                />
+                <span className="code">{r.code}</span>
+                <span className="t">{r.title}</span>
+                <span className="pill brand">{r.status}</span>
+              </button>
+            ))}
+          {listLoaded && reels.length === 0 && (
+            <p className="empty">
+              {query || statusFilter
+                ? "Nothing matches these filters — clear the search or status to see everything."
+                : "No reels yet. Create one above, or promote an idea from the Ideas screen."}
+            </p>
+          )}
         </div>
       </div>
 
@@ -515,14 +533,16 @@ function LibraryTab() {
                   )}
                 </td>
                 <td>{c.times_used}×</td>
-                <td style={{ textAlign: "right" }}>
+                <td>
                   {editing === c.id ? (
-                    <button className="btn primary" onClick={() => saveEdit(c)}>Save</button>
+                    <div className="row-actions">
+                      <button className="btn primary" onClick={() => saveEdit(c)}>Save</button>
+                    </div>
                   ) : (
-                    <>
-                      <button className="btn" onClick={() => { setEditing(c.id); setEditText(c.text); }}>Edit</button>{" "}
+                    <div className="row-actions">
+                      <button className="btn" onClick={() => { setEditing(c.id); setEditText(c.text); }}>Edit</button>
                       <button className="btn danger" onClick={() => archive(c.id)}>Archive</button>
-                    </>
+                    </div>
                   )}
                 </td>
               </tr>

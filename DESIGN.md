@@ -19,9 +19,9 @@ Dark-first. The app is used in long editing/planning sessions, often beside DaVi
 | Accent `--accent` | `#7CC08A` (leaf) | `#2F6B4F` (pine) |
 | Text on accent `--accent-ink` | `#10140F` | `#FFFFFF` |
 | Selection tint `--accent-soft` | `#24352A` | `#DFEAD9` |
-| Good | `#7CC08A` | `#3C8A4E` |
-| Warn | `#D9B35E` | `#B4831F` |
-| Bad | `#E0796A` | `#C24936` |
+| Good | `#7CC08A` | `#2E7040` |
+| Warn | `#D9B35E` | `#7F5A0E` |
+| Bad | `#E0796A` | `#AC3A28` |
 | Soft state tints | `--good-soft` `--warn-soft` `--bad-soft` | (see tokens.css) |
 | Pillar slots | moss / clay / ochre / teal (light tints, dark text) | solid earth tones, white text |
 

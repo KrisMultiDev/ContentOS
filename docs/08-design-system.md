@@ -15,9 +15,9 @@ Approved direction (see the live preview in [`style-preview.html`](style-preview
 | `--accent` (leaf / pine) | `#7CC08A` | `#2F6B4F` |
 | `--accent-ink` (text on accent) | `#10140F` | `#FFFFFF` |
 | `--accent-soft` (selection/hover tint) | `#24352A` | `#DFEAD9` |
-| `--good` | `#7CC08A` | `#3C8A4E` |
-| `--warn` | `#D9B35E` | `#B4831F` |
-| `--bad` | `#E0796A` | `#C24936` |
+| `--good` | `#7CC08A` | `#2E7040` |
+| `--warn` | `#D9B35E` | `#7F5A0E` |
+| `--bad` | `#E0796A` | `#AC3A28` |
 | `--good-soft` / `--warn-soft` / `--bad-soft` | `#22301F` / `#322A18` / `#38211D` | `#DFEEDB` / `#F3E8CC` / `#F6DDD7` |
 
 Pillar colors (calendar/boards) — dark theme uses light tints with dark text, light theme uses solid earth tones with white text:
@@ -26,7 +26,7 @@ Pillar colors (calendar/boards) — dark theme uses light tints with dark text, 
 |---|---|---|
 | Moss | `#8AB894` | `#4A7856` |
 | Clay | `#D19071` | `#A9603E` |
-| Ochre | `#CBAF63` | `#9A7B2D` |
+| Ochre | `#CBAF63` | `#7D641F` |
 | Teal | `#7FAEB5` | `#3E6E76` |
 
 ## Rules

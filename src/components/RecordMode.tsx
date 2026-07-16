@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ipc } from "../lib/ipc";
 import type { BatchDetail } from "../lib/types";
 
@@ -15,6 +15,11 @@ export default function RecordMode({ detail, onExit }: { detail: BatchDetail; on
     [detail.shots],
   );
   const [index, setIndex] = useState(firstPending);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    containerRef.current?.focus();
+  }, []);
 
   const shot = detail.shots[index];
   const done = Object.values(statuses).filter((s) => s !== "pending").length;
@@ -46,7 +51,7 @@ export default function RecordMode({ detail, onExit }: { detail: BatchDetail; on
   const status = statuses[shot.id];
 
   return (
-    <div className="record-mode" role="dialog" aria-label="Record mode">
+    <div className="record-mode" role="dialog" aria-label="Record mode" ref={containerRef} tabIndex={-1}>
       <header>
         <span className="code">{detail.code}</span>
         <span className="rm-progress mono">

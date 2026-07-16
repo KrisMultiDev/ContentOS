@@ -116,9 +116,11 @@ export default function Ideas() {
                       ))}
                     </select>
                   </td>
-                  <td style={{ textAlign: "right" }}>
-                    <button className="btn primary" onClick={() => promote(i.id)}>Promote to reel</button>{" "}
-                    <button className="btn danger" onClick={() => kill(i.id)}>Kill</button>
+                  <td>
+                    <div className="row-actions">
+                      <button className="btn primary" onClick={() => promote(i.id)}>Promote to reel</button>
+                      <button className="btn danger" onClick={() => kill(i.id)}>Kill</button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -58,12 +58,18 @@ body {
   cursor: pointer; font-family: inherit;
 }
 .btn:hover { background: var(--panel-2); }
-.btn:focus-visible, .nav:focus-visible, input:focus-visible, select:focus-visible {
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.btn:focus-visible, .nav:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, .reel-row:focus-visible, .picker-row:focus-visible,
+.star:focus-visible, .rm-tick:focus-visible, .stage:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 1px;
 }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); background: var(--accent); }
 .btn.danger { color: var(--bad); }
 .btn:disabled { opacity: 0.5; cursor: default; }
+
+.row-actions { display: flex; gap: 6px; justify-content: flex-end; }
 
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 14px 16px; }
 .panel > h2 {
@@ -81,7 +87,7 @@ body {
 .funnel { display: flex; gap: 6px; }
 .stage { flex: 1; text-align: center; padding: 8px 4px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--line); }
 .stage b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
-.stage span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.stage span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
 
 .code {
   font-family: var(--font-mono); font-size: 11px;
@@ -97,7 +103,7 @@ body {
 
 table.list { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 table.list th {
-  text-align: left; font-size: 10.5px; color: var(--muted);
+  text-align: left; font-size: 11px; color: var(--muted);
   text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
   padding: 4px 8px; border-bottom: 1px solid var(--line);
 }
@@ -151,7 +157,11 @@ textarea.notes { margin-bottom: 12px; }
 .block-head { display: flex; align-items: center; gap: 8px; }
 .block-head .grow { flex: 1; }
 .block-head .sub { color: var(--muted); font-size: 11px; }
-.linked-text { margin: 0; padding: 8px 10px; border-left: 3px solid var(--accent); background: var(--panel); border-radius: 4px; }
+.linked-text {
+  margin: 0; padding: 8px 10px;
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-radius: 4px;
+}
 
 .picker { border: 1px solid var(--accent); border-radius: 6px; padding: 8px; display: grid; gap: 6px; background: var(--panel); }
 .picker input { width: 100%; }
@@ -169,7 +179,7 @@ textarea.notes { margin-bottom: 12px; }
 .cal { display: grid; gap: 5px; }
 .cal-head { display: grid; grid-template-columns: repeat(7, 1fr) 44px; gap: 5px; }
 .cal-head div {
-  font-size: 10.5px; color: var(--muted); text-transform: uppercase;
+  font-size: 11px; color: var(--muted); text-transform: uppercase;
   letter-spacing: 0.05em; padding: 0 4px;
 }
 .cal-week { display: grid; grid-template-columns: repeat(7, 1fr) 44px; gap: 5px; }
@@ -180,23 +190,24 @@ textarea.notes { margin-bottom: 12px; }
 .cal-day.dim { opacity: 0.45; }
 .cal-day.today { border-color: var(--accent); }
 .cal-day .d {
-  display: flex; justify-content: space-between; font-size: 10.5px;
+  display: flex; justify-content: space-between; font-size: 11px;
   color: var(--muted); margin-bottom: 4px;
 }
 .cal-day .d .count { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 700; }
 .ev {
-  font-size: 10.5px; border-radius: 4px; padding: 2px 6px; margin-bottom: 3px;
+  font-size: 11px; border-radius: 4px; padding: 2px 6px; margin-bottom: 3px;
   color: var(--pillar-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   cursor: grab;
 }
-.cal-day .more, .cal .more { font-size: 10px; color: var(--muted); }
+.cal-day .more, .cal .more { font-size: 11px; color: var(--muted); }
 .cal-week-total {
   display: grid; place-content: center; text-align: center;
   background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px;
   font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums;
-  color: var(--warn);
+  color: var(--muted);
 }
-.cal-week-total span { font-size: 10px; color: var(--muted); font-weight: 500; }
+.cal-week-total span { font-size: 11px; color: var(--muted); font-weight: 500; }
+.cal-week-total.partial { color: var(--warn); }
 .cal-week-total.met { color: var(--good); }
 
 .tray { position: sticky; top: 0; }
@@ -235,7 +246,7 @@ textarea.notes { margin-bottom: 12px; }
 .rm-used { margin: 0; color: var(--muted); font-size: 12px; }
 .record-mode footer { display: flex; align-items: center; gap: 10px; }
 .record-mode kbd {
-  font-family: var(--font-mono); font-size: 10px; padding: 1px 5px;
+  font-family: var(--font-mono); font-size: 11px; padding: 1px 5px;
   border: 1px solid var(--line); border-radius: 3px; margin-left: 6px; opacity: 0.8;
 }
 .rm-hint { color: var(--muted); font-size: 12px; }
@@ -265,6 +276,31 @@ a.stage:hover { border-color: var(--accent); }
   .split, .cal-layout { grid-template-columns: 1fr; }
 }
 
+/* ── first-run steps ── */
+.start-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.start-step {
+  display: grid; gap: 4px; padding: 12px 14px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px;
+  color: var(--ink); text-decoration: none;
+}
+.start-step:hover { border-color: var(--accent); }
+.start-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.start-step b { font-size: 13px; font-weight: 650; }
+.start-step span { font-size: 12px; color: var(--muted); }
+
+/* ── skeleton loading ── */
+.skeleton {
+  border-radius: 6px;
+  background: linear-gradient(100deg, var(--panel-2) 40%, var(--accent-soft) 50%, var(--panel-2) 60%);
+  background-size: 200% 100%;
+  min-height: 14px;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .btn, .nav { transition: background-color 120ms ease; }
+  .skeleton { animation: shimmer 1.4s ease-in-out infinite; }
+  @keyframes shimmer {
+    from { background-position: 120% 0; }
+    to { background-position: -80% 0; }
+  }
+  .btn, .nav { transition: background-color 150ms ease, transform 100ms ease, filter 150ms ease; }
+  .reel-row, .picker-row, .tray-item, .take { transition: background-color 150ms ease; }
 }
