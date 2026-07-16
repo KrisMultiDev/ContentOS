@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import { openInExplorer } from "../lib/native";
 import type {
@@ -16,6 +17,13 @@ export default function Assemble() {
         <h1>Assemble</h1>
         <span className="sub">shot reels → DaVinci timelines → matched finals</span>
       </div>
+      <PageHelp>
+        <p>The bridge to DaVinci Resolve, in two halves:</p>
+        <ol>
+          <li><strong>Handoff out.</strong> Pick a batch and generate — every reel whose shots have selected takes gets a folder of renamed clips plus a ready-made timeline. In Resolve: <strong>File ▸ Import ▸ Timeline</strong> and pick <span className="mono">_IMPORT_ME.fcpxml</span>. Each reel appears as a timeline with its clips already in order — just trim and polish.</li>
+          <li><strong>Finals back in.</strong> Render from Resolve into the <span className="mono">03_EXPORTS</span> folder, keeping the timeline name as the filename (it contains the reel code, e.g. R0001). Click <strong>Scan exports</strong> — each render is matched to its reel; <strong>File it</strong> moves it into <span className="mono">04_FINALS</span> and marks the reel <span className="mono">edited</span>, ready for the Publish screen.</li>
+        </ol>
+      </PageHelp>
       <HandoffPanel />
       <ExportsPanel />
     </>

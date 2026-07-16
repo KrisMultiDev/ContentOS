@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import type { Idea, Pillar, ReelDetail } from "../lib/types";
 
@@ -70,6 +71,10 @@ export default function Ideas() {
         <h1>Ideas</h1>
         <span className="sub">{ideas.length} open</span>
       </div>
+
+      <PageHelp>
+        <p>The idea backlog — the very start of the pipeline. Type an idea, press Enter, move on; capture should take seconds. Later, go through the list: <strong>Promote</strong> turns an idea into a reel and drops you straight into the script editor; <strong>Kill</strong> clears out the weak ones (nothing is deleted, just tucked away).</p>
+      </PageHelp>
 
       <div className="panel">
         <h2>Capture</h2>

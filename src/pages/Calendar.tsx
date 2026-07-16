@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import { pillarColor, type CalendarReel, type Pillar, type ReelSummary } from "../lib/types";
 
@@ -90,6 +91,12 @@ export default function Calendar() {
         <button className="btn" onClick={() => shiftMonth(1)}>→</button>
       </div>
       {error && <p className="error-text">{error}</p>}
+
+      <PageHelp>
+        <p>Plan which reel posts on which day. <strong>Drag</strong> a reel from the Unscheduled tray onto a day; drag between days to move it; drag back to the tray to unplan. <strong>Double-click</strong> any chip to open that reel in the editor.</p>
+        <p>The number at the end of each week row is that week's total against your weekly target (set in Settings) — gray when empty, amber while filling, green when met. Chip colors are the reel's pillar.</p>
+        <p className="muted-note">This date is the planning intent. Exact posting times per platform are set later on the Publish screen — "Fill times from calendar dates" uses what you plan here.</p>
+      </PageHelp>
 
       <div className="cal-layout">
         <div className="cal">

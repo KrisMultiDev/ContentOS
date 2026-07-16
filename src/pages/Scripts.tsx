@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import {
   pillarColor,
@@ -43,7 +44,27 @@ export default function Scripts() {
           Component library
         </button>
       </div>
-      {tab === "reels" ? <ReelsTab /> : <LibraryTab />}
+      {tab === "reels" ? (
+        <>
+          <PageHelp>
+            <p>Every reel is a script made of <strong>blocks</strong>: usually a hook (first 1–3 seconds), a body, and a CTA. Two ways to fill a block:</p>
+            <ul>
+              <li><strong>Write text directly</strong> — one-off material for this reel only.</li>
+              <li><strong>Link a component</strong> — reusable material from your library (see the Component library tab). One strong body linked into 5 reels with 5 different hooks = 5 reels, recorded once.</li>
+            </ul>
+            <p>The <strong>status dropdown</strong> is the reel's pipeline stage (idea → scripted → shot-listed → shot → assembled → edited → scheduled → posted → verified). <span className="muted-note">It moves automatically as you work — you rarely need to touch it. Change it manually only to fix a mistake.</span></p>
+            <p className="muted-note">Once scripted, add the reel to a shoot batch on the <Link to="/shoot">Shoot screen</Link>.</p>
+          </PageHelp>
+          <ReelsTab />
+        </>
+      ) : (
+        <>
+          <PageHelp>
+            <p>The library holds your <strong>reusable</strong> hooks, bodies, and CTAs. Write once, link into any number of reels from the block editor ("Link component…"). "Used" shows how many reels reference each one — and a component is only ever <strong>recorded once</strong>: its best take is reused in every reel that links it.</p>
+          </PageHelp>
+          <LibraryTab />
+        </>
+      )}
     </>
   );
 }
@@ -278,7 +299,11 @@ function ReelsTab() {
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>
-              <select value={detail.status} onChange={(e) => changeStatus(e.target.value)}>
+              <select
+                value={detail.status}
+                onChange={(e) => changeStatus(e.target.value)}
+                title="Pipeline stage — moves automatically as you work; change manually only to correct a mistake"
+              >
                 {[...STATUS_ORDER, "archived", "killed"].map((s) => (
                   <option key={s} value={s}>{s}</option>
                 ))}

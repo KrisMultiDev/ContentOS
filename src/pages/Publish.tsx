@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import { openInExplorer } from "../lib/native";
 import {
@@ -38,6 +39,16 @@ export default function Publish() {
         </span>
       </div>
       {error && <p className="error-text">{error}</p>}
+
+      <PageHelp>
+        <p>The last mile — numbered panels top to bottom:</p>
+        <ol>
+          <li><strong>Queue</strong> edited reels: creates one post per platform (Instagram, TikTok, YouTube).</li>
+          <li><strong>Caption &amp; schedule</strong>: one caption + hashtags per reel (shared by its three posts), a date&amp;time per platform. "Fill times from calendar dates" stamps them all at once from your calendar plan.</li>
+          <li><strong>Export</strong>: writes a Metricool bulk-import CSV plus the videos, named by slot. In Metricool's Planner, import the CSV and attach each video by its matching filename.</li>
+          <li><strong>Tracking</strong>: after Metricool posts them, mark each one Published, then Verify live. Reels advance to <span className="mono">verified</span> automatically. <span className="muted-note">(These moves become automatic once the Metricool API plan is connected.)</span></li>
+        </ol>
+      </PageHelp>
 
       <QueuePanel posts={posts} onChanged={refresh} />
       <DraftsPanel drafts={drafts} onChanged={refresh} onError={setError} />
@@ -294,6 +305,11 @@ function ExportPanel({
           Ready = caption + time + final render. In Metricool: Planner ▸ bulk import the CSV, then attach each staged video (filenames match the slots).
         </span>
       </div>
+      {ready.length === 0 && drafts.length > 0 && (
+        <p className="hint" style={{ marginTop: 6 }}>
+          No post is ready yet — each needs a caption, a schedule time, and a final render before it can be exported.
+        </p>
+      )}
       {bundle && (
         <div className="report">
           <p className="report-line good-line">

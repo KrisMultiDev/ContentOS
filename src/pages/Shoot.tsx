@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import PageHelp from "../components/PageHelp";
 import RecordMode from "../components/RecordMode";
 import { ipc } from "../lib/ipc";
 import type { BatchDetail, BatchSummary, ReelSummary } from "../lib/types";
@@ -57,6 +58,17 @@ export default function Shoot() {
         )}
       </div>
       {error && <p className="error-text">{error}</p>}
+
+      <PageHelp>
+        <p>A <strong>batch</strong> is one recording session. The flow:</p>
+        <ol>
+          <li>Create a batch (name it after the session, e.g. "Monday studio").</li>
+          <li>Select it, click <strong>Add reels…</strong> and tick the scripted reels you'll shoot. Their script blocks become the <strong>shot list</strong> — reels sharing the same hook or body collapse into a single shot, so you never record the same thing twice.</li>
+          <li>On recording day, hit <strong>Record Mode</strong>: a fullscreen teleprompter walks you through every shot (Space = recorded, K = skip, arrows to move, Esc to exit).</li>
+          <li>Afterwards, copy your footage into the <strong>00_INBOX</strong> folder and go to <Link to="/library">Library</Link> to link clips to these shots.</li>
+        </ol>
+        <p className="muted-note">Only reels with a script appear in the Add reels list — write them on the Scripts screen first.</p>
+      </PageHelp>
 
       <div className="split">
         <div className="panel col-list">
@@ -150,19 +162,27 @@ function BatchView({ detail, reload }: { detail: BatchDetail; reload: () => void
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
-        <button className="btn" onClick={() => setAdding(!adding)}>
+        <button className={detail.shots.length === 0 && !adding ? "btn primary" : "btn"} onClick={() => setAdding(!adding)}>
           {adding ? "Close" : "Add reels…"}
         </button>
       </div>
       {error && <p className="error-text">{error}</p>}
 
-      {adding && <AddReels batchId={detail.id} onDone={() => { setAdding(false); reload(); }} />}
+      {adding && (
+        <AddReels
+          batchId={detail.id}
+          inBatch={new Set(detail.shots.flatMap((s) => s.used_by))}
+          onDone={() => { setAdding(false); reload(); }}
+        />
+      )}
 
       {detail.shots.length === 0 ? (
-        <p className="empty">
-          No shots yet. Add scripted reels — shared hooks and bodies collapse into single shots, so
-          30 reels might be only 40 clips to record.
-        </p>
+        !adding && (
+          <p className="empty">
+            This batch has no shot list yet. Click <strong>Add reels…</strong> above and tick the
+            reels you'll shoot — their script blocks become the shots.
+          </p>
+        )
       ) : (
         <table className="list">
           <thead>
@@ -199,7 +219,15 @@ function BatchView({ detail, reload }: { detail: BatchDetail; reload: () => void
   );
 }
 
-function AddReels({ batchId, onDone }: { batchId: string; onDone: () => void }) {
+function AddReels({
+  batchId,
+  inBatch,
+  onDone,
+}: {
+  batchId: string;
+  inBatch: Set<string>;
+  onDone: () => void;
+}) {
   const [candidates, setCandidates] = useState<ReelSummary[]>([]);
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
@@ -208,8 +236,10 @@ function AddReels({ batchId, onDone }: { batchId: string; onDone: () => void }) 
     Promise.all([
       ipc<ReelSummary[]>("reels_list", { status: "scripted", pillarId: null, query: null }),
       ipc<ReelSummary[]>("reels_list", { status: "shotlisted", pillarId: null, query: null }),
-    ]).then(([a, b]) => setCandidates([...(a ?? []), ...(b ?? [])]));
-  }, []);
+    ]).then(([a, b]) =>
+      setCandidates([...(a ?? []), ...(b ?? [])].filter((r) => !inBatch.has(r.code))),
+    );
+  }, [inBatch]);
 
   async function add() {
     try {
@@ -241,13 +271,19 @@ function AddReels({ batchId, onDone }: { batchId: string; onDone: () => void }) 
           </label>
         ))}
         {candidates.length === 0 && (
-          <p className="empty">No scripted reels waiting. Write scripts first, then batch them here.</p>
+          <p className="empty">
+            Nothing left to add — every scripted reel is already in this batch, or none exist yet.{" "}
+            <Link to="/scripts">Write scripts on the Scripts screen</Link>, then come back here.
+          </p>
         )}
       </div>
       <div className="field-row">
         <button className="btn primary" onClick={add} disabled={checked.size === 0}>
           Add {checked.size || ""} reel{checked.size === 1 ? "" : "s"} to shot list
         </button>
+        {checked.size === 0 && candidates.length > 0 && (
+          <span className="hint">Tick at least one reel above to enable this.</span>
+        )}
       </div>
       {error && <p className="error-text">{error}</p>}
     </div>

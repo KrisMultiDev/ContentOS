@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import PageHelp from "../components/PageHelp";
 import { ipc } from "../lib/ipc";
 import { openInExplorer } from "../lib/native";
 import {
@@ -139,6 +141,15 @@ export default function Library() {
       )}
       {error && <p className="error-text">{error}</p>}
 
+      <PageHelp>
+        <p>After a shoot: get your footage into the app and matched to shots.</p>
+        <ol>
+          <li>Copy the recordings into your media folder's <strong>00_INBOX</strong> (the "Open inbox" button takes you there), then click <strong>Scan inbox</strong>. Duplicate files are detected and skipped automatically.</li>
+          <li>Pick your shoot batch on the right. For each shot: <strong>tick the clips</strong> in the left list that belong to it (they're in shoot order), then click the shot's <strong>← takes</strong> button. The files are renamed and filed automatically (e.g. <span className="mono">B001_HK0001_T01.mp4</span>).</li>
+          <li>Rate the takes (stars) and hit <strong>Select</strong> on the best one per shot. When every block of a reel has a selected take, the reel moves to <span className="mono">shot</span> — ready for the <Link to="/assemble">Assemble screen</Link>.</li>
+        </ol>
+      </PageHelp>
+
       {roots.length === 0 ? (
         <div className="panel placeholder">
           <span className="phase">Setup needed</span>
@@ -200,6 +211,12 @@ export default function Library() {
             {!batch ? (
               <p className="empty">Create a shoot batch first — shots to link takes to live there.</p>
             ) : (
+              <>
+                {checked.size === 0 && inbox.length > 0 && batch.shots.length > 0 && (
+                  <p className="hint" style={{ margin: "0 0 8px" }}>
+                    Tick clips on the left, then click "← takes" on the shot they belong to.
+                  </p>
+                )}
               <div className="shot-triage">
                 {batch.shots.map((s) => (
                   <div className="triage-shot" key={s.id}>
@@ -252,6 +269,7 @@ export default function Library() {
                   <p className="empty">This batch has no shots yet — add reels to it on the Shoot screen.</p>
                 )}
               </div>
+              </>
             )}
           </div>
         </div>

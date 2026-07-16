@@ -34,6 +34,7 @@ Layout: `src/` React UI · `src-tauri/` Tauri shell (thin command layer) · `cra
 
 | Doc | Contents |
 |---|---|
+| **[Tutorial](docs/TUTORIAL.md)** | **Start here: how to use the app + a full worked example (idea → ready to post)** |
 | [01 – Product Overview](docs/01-product-overview.md) | Vision, the 100/week workflow, throughput math, screen map |
 | [02 – Architecture](docs/02-architecture.md) | Tauri + React + SQLite stack, process model, storage roots (PC → NAS migration) |
 | [03 – Data Model](docs/03-data-model.md) | Every entity + full SQLite schema |
