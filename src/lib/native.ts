@@ -1,5 +1,5 @@
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { openPath } from "@tauri-apps/plugin-opener";
+import { ipc } from "./ipc";
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
@@ -12,10 +12,19 @@ export async function pickFolder(title?: string): Promise<string | null> {
   return typeof result === "string" ? result : null;
 }
 
-/** Open a folder (or file) in Windows Explorer. No-op in browser dev. */
-export async function openInExplorer(path: string): Promise<void> {
-  if (!isTauri) return;
-  await openPath(path);
+/**
+ * Open a folder in the OS file manager (Explorer on Windows). No-op in
+ * browser dev. Returns an error string on failure, or null on success, so
+ * callers can surface it instead of the click silently doing nothing.
+ */
+export async function openInExplorer(path: string): Promise<string | null> {
+  if (!isTauri) return null;
+  try {
+    await ipc("reveal_path", { path });
+    return null;
+  } catch (e) {
+    return String(e);
+  }
 }
 
 /** Last path segment — a sensible default name for a picked folder. */

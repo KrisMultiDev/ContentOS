@@ -72,14 +72,27 @@ function PillarsPanel() {
       )}
       <div className="field-row" style={{ marginTop: 12 }}>
         <input type="text" placeholder="Pillar name" value={name} onChange={(e) => setName(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
-        <select value={color} onChange={(e) => setColor(e.target.value)}>
-          {Object.keys(PILLAR_COLORS).map((c) => (
-            <option key={c} value={c}>{c}</option>
+        <div className="swatch-pick" role="radiogroup" aria-label="Pillar color">
+          {Object.entries(PILLAR_COLORS).map(([c, val]) => (
+            <button
+              key={c}
+              type="button"
+              className={color === c ? "swatch-btn on" : "swatch-btn"}
+              style={{ background: val }}
+              onClick={() => setColor(c)}
+              title={c}
+              aria-label={c}
+              aria-pressed={color === c}
+            />
           ))}
-        </select>
-        <input type="text" placeholder="Target/week" value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 100 }} />
+        </div>
+        <input type="text" placeholder="Target/week" value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 100 }} title="How many of this pillar you aim to post per week" />
         <button className="btn primary" onClick={add} disabled={!name.trim()}>Add pillar</button>
       </div>
+      <p className="empty" style={{ paddingTop: 4 }}>
+        Pillars are your content categories (e.g. Gym myths, Meal prep). Each reel is tagged with one;
+        its color marks it on the calendar and boards, and the weekly target helps you balance the mix.
+      </p>
       {error && <p className="error-text">{error}</p>}
     </div>
   );
@@ -259,7 +272,14 @@ export default function Settings() {
                   </td>
                   <td>
                     <div className="row-actions">
-                      <button className="btn" onClick={() => openInExplorer(r.path)} disabled={!r.online}>
+                      <button
+                        className="btn"
+                        onClick={async () => {
+                          const e = await openInExplorer(r.path);
+                          if (e) setError(e);
+                        }}
+                        disabled={!r.online}
+                      >
                         Open
                       </button>
                       <button className="btn" onClick={() => repointRoot(r)} title="Point this root at a new location (after moving to the NAS)">

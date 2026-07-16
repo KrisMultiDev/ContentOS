@@ -79,6 +79,30 @@ pub fn reels_stuck(state: State<'_, AppState>, days: i64) -> CmdResult<Vec<reels
     reels::stuck(&db.conn, days).map_err(err)
 }
 
+/// Open a folder in the OS file manager. Falls back to the nearest existing
+/// ancestor so the button never dead-ends (e.g. an inbox not created yet
+/// opens the media root instead).
+#[tauri::command]
+pub fn reveal_path(path: String) -> CmdResult<()> {
+    let mut target = std::path::PathBuf::from(&path);
+    while !target.exists() {
+        match target.parent() {
+            Some(p) if p != target => target = p.to_path_buf(),
+            _ => return Err(format!("Folder not found and no parent exists: {path}")),
+        }
+    }
+    #[cfg(target_os = "windows")]
+    let spawned = std::process::Command::new("explorer").arg(&target).spawn();
+    #[cfg(target_os = "macos")]
+    let spawned = std::process::Command::new("open").arg(&target).spawn();
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let spawned = std::process::Command::new("xdg-open").arg(&target).spawn();
+
+    // explorer.exe returns a non-zero code even on success, so we only care
+    // that the process launched, not its exit status.
+    spawned.map(|_| ()).map_err(|e| format!("Couldn't open the file manager: {e}"))
+}
+
 #[tauri::command]
 pub fn backup_now(state: State<'_, AppState>) -> CmdResult<String> {
     let db = state.db.lock().map_err(err)?;
