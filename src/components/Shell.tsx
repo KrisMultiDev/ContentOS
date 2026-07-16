@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { ipc } from "../lib/ipc";
 import type { AppInfo } from "../lib/types";
+import Icon, { type IconName } from "./Icon";
 
-const NAV = [
-  { to: "/", label: "Dashboard" },
-  { to: "/ideas", label: "Ideas" },
-  { to: "/calendar", label: "Calendar" },
-  { to: "/scripts", label: "Scripts" },
-  { to: "/shoot", label: "Shoot" },
-  { to: "/library", label: "Library" },
-  { to: "/assemble", label: "Assemble" },
-  { to: "/publish", label: "Publish" },
-  { to: "/settings", label: "Settings" },
+const NAV: { to: string; label: string; icon: IconName }[] = [
+  { to: "/", label: "Dashboard", icon: "dashboard" },
+  { to: "/ideas", label: "Ideas", icon: "ideas" },
+  { to: "/calendar", label: "Calendar", icon: "calendar" },
+  { to: "/scripts", label: "Scripts", icon: "scripts" },
+  { to: "/shoot", label: "Shoot", icon: "shoot" },
+  { to: "/library", label: "Library", icon: "library" },
+  { to: "/assemble", label: "Assemble", icon: "assemble" },
+  { to: "/publish", label: "Publish", icon: "publish" },
+  { to: "/settings", label: "Settings", icon: "settings" },
 ];
 
 export default function Shell() {
@@ -35,7 +36,7 @@ export default function Shell() {
             end={n.to === "/"}
             className={({ isActive }) => (isActive ? "nav on" : "nav")}
           >
-            <span className="dot" /> {n.label}
+            <Icon name={n.icon} /> {n.label}
           </NavLink>
         ))}
         <div className="spacer" />

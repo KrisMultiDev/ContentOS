@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use contentos_core::{
-    activity, batches, components, davinci, ideas, jobs, library, pillars, reels, roots, search,
-    settings,
+    activity, batches, components, davinci, ideas, jobs, library, pillars, posts, reels, roots,
+    search, settings,
 };
 use serde::Serialize;
 use serde_json::Value;
@@ -465,4 +465,65 @@ pub fn export_confirm(
 ) -> CmdResult<davinci::ConfirmedExport> {
     let db = state.db.lock().map_err(err)?;
     davinci::confirm_export(&db.conn, &root_id, &rel_path, &reel_id).map_err(err)
+}
+
+// ── publishing ───────────────────────────────────────────────────
+
+#[tauri::command]
+pub fn posts_ensure(
+    state: State<'_, AppState>,
+    reel_id: String,
+    platforms: Vec<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    posts::ensure_posts(&db.conn, &reel_id, &platforms).map_err(err)
+}
+
+#[tauri::command]
+pub fn posts_list(state: State<'_, AppState>, status: Option<String>) -> CmdResult<Vec<posts::PostView>> {
+    let db = state.db.lock().map_err(err)?;
+    posts::list_posts(&db.conn, status.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn post_update(
+    state: State<'_, AppState>,
+    id: String,
+    caption: Option<String>,
+    hashtags: Vec<String>,
+    scheduled_at: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    posts::update_post(&db.conn, &id, caption.as_deref(), &hashtags, scheduled_at.as_deref())
+        .map_err(err)
+}
+
+#[tauri::command]
+pub fn post_set_status(
+    state: State<'_, AppState>,
+    id: String,
+    status: String,
+    error_note: Option<String>,
+) -> CmdResult<()> {
+    let db = state.db.lock().map_err(err)?;
+    posts::set_post_status(&db.conn, &id, &status, error_note.as_deref()).map_err(err)
+}
+
+#[tauri::command]
+pub fn posts_bulk_fill(
+    state: State<'_, AppState>,
+    times: std::collections::HashMap<String, String>,
+) -> CmdResult<i64> {
+    let db = state.db.lock().map_err(err)?;
+    posts::bulk_fill_schedule(&db.conn, &times).map_err(err)
+}
+
+#[tauri::command]
+pub fn publish_export(
+    state: State<'_, AppState>,
+    root_id: String,
+    post_ids: Vec<String>,
+) -> CmdResult<posts::ExportBundle> {
+    let db = state.db.lock().map_err(err)?;
+    posts::export_bundle(&db.conn, &root_id, &post_ids).map_err(err)
 }

@@ -12,7 +12,7 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 
 ## Status
 
-**Phase 3 — edit pipeline.** Planning and shooting are live, and now the DaVinci Resolve bridge is too: one click stages a batch into per-reel handoff folders (hardlinked, renamed clips + script text), generates a single FCPXML with a ready-made 1080×1920 timeline per reel (File ▸ Import ▸ Timeline in Resolve), and a watch on 03_EXPORTS matches rendered finals back to reels by their R-code, files them into 04_FINALS, and flips reels to `edited`. Publish (Metricool) is the remaining placeholder ([roadmap](docs/07-roadmap.md)).
+**Phase 4 — publishing.** The full pipeline is live end to end: queue edited reels into per-platform posts (IG/TikTok/Shorts), write captions + hashtags once per reel, bulk-fill schedule times from calendar dates, then export a Metricool bundle — a bulk-import CSV plus the finals hardlinked and named by slot (2026-07-20_0900_IG_R0142.mp4) for the free-plan manual flow. A tracking board walks posts through scheduled → published → verified (with failure lanes), and reel status follows automatically to `verified`. The Metricool API provider drops in behind the same interface when the plan upgrade lands ([roadmap](docs/07-roadmap.md)).
 
 ## Development
 

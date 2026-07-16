@@ -71,6 +71,12 @@ pub fn run() {
             commands::handoff_generate,
             commands::exports_scan,
             commands::export_confirm,
+            commands::posts_ensure,
+            commands::posts_list,
+            commands::post_update,
+            commands::post_set_status,
+            commands::posts_bulk_fill,
+            commands::publish_export,
         ])
         .run(tauri::generate_context!())
         .expect("error while running ContentOS");

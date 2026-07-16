@@ -5,7 +5,7 @@ import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
 import Ideas from "./pages/Ideas";
 import Library from "./pages/Library";
-import Placeholder from "./pages/Placeholder";
+import Publish from "./pages/Publish";
 import Scripts from "./pages/Scripts";
 import Settings from "./pages/Settings";
 import Shoot from "./pages/Shoot";
@@ -22,16 +22,7 @@ export default function App() {
           <Route path="shoot" element={<Shoot />} />
           <Route path="library" element={<Library />} />
           <Route path="assemble" element={<Assemble />} />
-          <Route
-            path="publish"
-            element={
-              <Placeholder
-                title="Publish"
-                phase="Phase 4"
-                blurb="Captions and hashtags per platform, schedule bulk-fill, Metricool push, and the posted-verification board."
-              />
-            }
-          />
+          <Route path="publish" element={<Publish />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

@@ -5,6 +5,7 @@ pub mod davinci;
 pub mod db;
 pub mod library;
 pub mod media;
+pub mod posts;
 pub mod ideas;
 pub mod ids;
 pub mod jobs;

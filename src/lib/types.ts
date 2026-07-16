@@ -226,6 +226,47 @@ export interface ExportScan {
   unmatched: string[];
 }
 
+export type Platform = "instagram" | "tiktok" | "youtube";
+export const PLATFORMS: Platform[] = ["instagram", "tiktok", "youtube"];
+export const PLATFORM_SHORT: Record<Platform, string> = {
+  instagram: "IG",
+  tiktok: "TT",
+  youtube: "YT",
+};
+
+export type PostStatus =
+  | "draft" | "queued" | "pushed" | "scheduled"
+  | "published" | "verified" | "failed" | "canceled";
+
+export interface PostView {
+  id: string;
+  reel_id: string;
+  reel_code: string;
+  reel_title: string;
+  reel_status: ReelStatus;
+  target_date: string | null;
+  platform: Platform;
+  caption: string | null;
+  hashtags: string[];
+  scheduled_at: string | null;
+  status: PostStatus;
+  error: string | null;
+  final_filename: string | null;
+}
+
+export interface ExportBundle {
+  folder: string;
+  csv_path: string;
+  exported: string[];
+  skipped: string[];
+}
+
+export const DEFAULT_POST_TIMES: Record<Platform, string> = {
+  instagram: "09:00",
+  tiktok: "12:30",
+  youtube: "17:00",
+};
+
 export function fmtBytes(n: number): string {
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)} GB`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)} MB`;

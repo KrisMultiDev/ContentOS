@@ -39,8 +39,8 @@ body {
 }
 .nav:hover { background: var(--panel-2); color: var(--ink); }
 .nav.on { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
-.nav .dot { width: 6px; height: 6px; border-radius: 2px; background: currentColor; opacity: 0.55; }
-.nav.on .dot { background: var(--accent); opacity: 1; }
+.nav svg { flex: none; opacity: 0.75; }
+.nav.on svg { color: var(--accent); opacity: 1; }
 .side .spacer { flex: 1; }
 .side-foot { margin: 0 6px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--muted); display: grid; gap: 8px; }
 
@@ -275,6 +275,23 @@ a.stage:hover { border-color: var(--accent); }
 @media (max-width: 900px) {
   .split, .cal-layout { grid-template-columns: 1fr; }
 }
+
+/* ── publish ── */
+.post-groups { display: flex; flex-direction: column; gap: 10px; }
+.post-group { border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: var(--panel-2); display: grid; gap: 8px; }
+.post-group textarea { background: var(--panel); }
+.plat-chip {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  border: 1px solid var(--line); border-radius: var(--radius-chip);
+  padding: 1px 5px; color: var(--muted);
+}
+.time-slot { display: inline-flex; align-items: center; gap: 5px; }
+input[type="datetime-local"], input[type="date"] {
+  background: var(--panel-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 8px; font-family: inherit; font-size: 12px;
+}
+.post-group input[type="datetime-local"] { background: var(--panel); }
 
 /* ── assemble reports ── */
 .report { display: grid; gap: 8px; margin-top: 12px; }

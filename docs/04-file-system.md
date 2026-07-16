@@ -28,6 +28,10 @@ Under the `media` root (today `D:\ContentOS`, later `\\unraid\content`):
     2026-07/
       R0142_gym-myths_FINAL.mp4
   05_ARCHIVE/                     ← killed/expired material (manual or rule-based)
+  06_PUBLISH/                     ← Metricool CSV bundles (app-generated)
+    bundle_20260716T1530/
+      metricool_import.csv
+      2026-07-20_0900_IG_R0142.mp4  ← staged finals, named by slot
 ```
 
 ## Naming grammar
