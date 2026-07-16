@@ -25,6 +25,7 @@ The app plans and tracks everything, organizes every file on disk, generates rea
 | [05 – DaVinci Integration](docs/05-davinci-integration.md) | Batch handoff folders, generated FCPXML timelines, export auto-matching |
 | [06 – Metricool Publishing](docs/06-metricool-publishing.md) | Push scheduling, posted-verification, metrics, CSV fallback |
 | [07 – Roadmap](docs/07-roadmap.md) | Build phases from empty repo to full pipeline |
+| [08 – Design System](docs/08-design-system.md) | Fieldhouse Green tokens (dark-first), type, UI rules — [live preview](docs/style-preview.html) |
 
 ## Core decisions (locked)
 
