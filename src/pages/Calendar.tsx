@@ -170,7 +170,7 @@ export default function Calendar() {
         >
           <h2>Unscheduled · {tray.length}</h2>
           <p className="empty" style={{ paddingTop: 0 }}>
-            Drag onto a day to plan it. Drop here to unschedule.
+            Drag a reel onto a day — or just set its date below. Drop a reel back here to unschedule it.
           </p>
           <div className="tray-list">
             {tray.map((r) => (
@@ -179,12 +179,16 @@ export default function Calendar() {
                 className="tray-item"
                 draggable
                 onDragStart={(e) => e.dataTransfer.setData("text/reel-id", r.id)}
-                onDoubleClick={() => navigate(`/scripts?reel=${r.id}`)}
               >
                 <span className="pillar-dot" style={{ background: pillarColor(pillars, r.pillar_id) }} />
                 <span className="code">{r.code}</span>
-                <span className="t">{r.title}</span>
-                <span className="pill brand">{r.status}</span>
+                <span className="t" title={r.title}>{r.title}</span>
+                <input
+                  type="date"
+                  className="tray-date"
+                  title="Set the day this reel posts"
+                  onChange={(e) => e.target.value && drop(r.id, e.target.value)}
+                />
               </div>
             ))}
             {tray.length === 0 && <p className="empty">Everything active has a date. Nice.</p>}
