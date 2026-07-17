@@ -224,6 +224,9 @@ textarea.notes { margin-bottom: 12px; }
   border-radius: 6px; cursor: grab; font-size: 12.5px;
 }
 .tray-item:hover { background: var(--panel-2); }
+.tray-date { flex: none; width: 124px; padding: 5px 6px; cursor: pointer; }
+.tray-date::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+:root[data-theme="light"] .tray-date::-webkit-calendar-picker-indicator { filter: none; }
 
 /* ── record mode ── */
 .record-mode {

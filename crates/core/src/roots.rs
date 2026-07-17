@@ -7,6 +7,51 @@ use crate::{ids, CoreError, Result};
 
 pub const MARKER_FILE: &str = ".contentos-root";
 
+/// The standard library folder structure created inside every storage root.
+pub const LIBRARY_DIRS: &[&str] = &[
+    "00_INBOX",   // drop raw shoot footage here
+    "01_RAW",     // app files selected takes here, per batch
+    "02_HANDOFF", // app stages DaVinci import folders here
+    "03_EXPORTS", // render finished reels from DaVinci to here
+    "04_FINALS",  // app files matched finals here, by month
+    "05_ARCHIVE", // retired material
+    "06_PUBLISH", // app writes Metricool export bundles here
+];
+
+const README: &str = "\
+ContentOS media library
+=======================
+
+This folder is managed by ContentOS. You only ever touch two folders by hand:
+
+  00_INBOX    -> put your raw shoot footage here, then hit \"Scan inbox\" in the app.
+  03_EXPORTS  -> render your finished reels from DaVinci Resolve to here.
+
+Everything else is filled in automatically by the app:
+
+  01_RAW      selected takes, renamed and filed per shoot batch
+  02_HANDOFF  ready-to-edit DaVinci folders + timelines (disposable)
+  04_FINALS   your matched final renders, filed by month
+  05_ARCHIVE  retired material
+  06_PUBLISH  Metricool export bundles (CSV + videos)
+
+Do not rename these folders or the hidden .contentos-root file. To move this
+library to another drive or your NAS, copy the WHOLE folder, then use
+Settings -> Re-point in the app.
+";
+
+/// Create the standard folder structure (best-effort; a read-only subfolder
+/// on a NAS shouldn't block anything).
+pub fn scaffold_dirs(dir: &Path) {
+    for d in LIBRARY_DIRS {
+        let _ = std::fs::create_dir_all(dir.join(d));
+    }
+    let readme = dir.join("_READ_ME_FIRST.txt");
+    if !readme.exists() {
+        let _ = std::fs::write(&readme, README);
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StorageRoot {
     pub id: String,
@@ -72,6 +117,7 @@ pub fn add_root(conn: &Connection, name: &str, path: &str, kind: &str) -> Result
          VALUES (?1, ?2, ?3, ?4, 1, ?5)",
         rusqlite::params![root.id, root.name, root.path, root.kind, root.created_at],
     )?;
+    scaffold_dirs(dir);
     Ok(root)
 }
 
@@ -99,6 +145,9 @@ pub fn list_roots(conn: &Connection) -> Result<Vec<StorageRoot>> {
             rusqlite::params![online as i64, id],
         )?;
         let free_bytes = if online {
+            // self-heal folder structure for roots added before scaffolding,
+            // or if a folder was deleted by hand
+            scaffold_dirs(Path::new(&path));
             fs2::available_space(Path::new(&path)).ok().map(|v| v as i64)
         } else {
             None
